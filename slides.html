@@ -20,17 +20,17 @@ class: center, middle, inverse, title-slide
 
 
 
-
----
-# The properties of large psychological assessments (e.g. WJ III, WISC/WAIS IV)
+### The properties of large psychological assessments (e.g. WJ III, WISC/WAIS IV)
 - Multiple tests
 - Complicated relations
 
 ???
 For example, Woodcock-Johnson IV is a wildly used assessment battery that assess both cognitive abilities and academic achievements.
 
-
-
+---
+background-image: url(http://rnorm.me/5.png)
+---
+background-image: url(http://rnorm.me/6.png)
 ---
 background-image: url(http://rnorm.me/1.svg)
 `\(Reading\)` `\(Decoding\)` = `\(b_0\)` + `\(b_1Gc\)` + `\(b_2Phonological\)` `\(Awareness\)` + `\(error\)`
@@ -64,6 +64,29 @@ background-size: 900px
 ???
 We could quantify the how unusual we would observe the profile in population
 ---
+# Technical Details
+- Latent Variable Estimation
+- Conditional Probability 
+- Mahalanobis Distance
+- Conditional Mahalanobis Distance
+---
+# Latent score estimation methods
+
+1. Thurstone: Regression-based least squares method&lt;sup&gt;1&lt;/sup&gt;
+
+2. Bartlett's approach: Least squares method with correction of covariance between factors&lt;sup&gt;2&lt;/sup&gt;
+
+3. Empirical Bayes random effects estimates&lt;sup&gt;3&lt;/sup&gt; 
+
+
+
+.footnote[
+[1] Thurstone, L. L. (1935). The vectors of the mind. Chicago, IL: University of Chicago Press.
+
+[2] Bartlett, M. S. (1937). The statistical conception of mental factors. *British Journal of Psychology*, 28, 97-104.
+
+[3] Estabrook, R., &amp; Neale, M. (2013). A comparison of factor score estimation methods in the presence of missing data: Reliability and an application to nicotine dependence. *Multivariate Behavioral research*, 48(1), 1-27.
+]
 ---
 
 &lt;iframe src="http://students.brown.edu/seeing-theory/compound-probability/index.html#third" width="100%" height="700px"&gt;&lt;/iframe&gt;
@@ -73,9 +96,14 @@ We could quantify the how unusual we would observe the profile in population
 - The Mahalanobis Distance is a generalized multidimensional way to measure the distance between two vectors in standard deviation units. 
 $$d_M = \sqrt{(x - \mu)' C^{-1} (x - \mu)  } $$
 ---
-- Conditional Mahalanobis Distance
+# Conditional Mahalanobis Distance&lt;sup&gt;1&lt;/sup&gt;
+.footnote[
+[1] Schneider, W. J. (2017). Geometric Representation of Composite Scores and Profile Variability. Unpublished manuscript.
+]
+
 $$d_{cM} = \sqrt{(Z_o - \hat{Z_o})' R_o^{-1} (Z_o - \hat{Z_o})} $$
 $$d_M^2 \sim \chi^2(k -c) $$
+
 ---
 # Applications
 1. Help clinicians understand implications of the model.
@@ -139,7 +167,8 @@ factor scores
 ---
 ### Goal 2: Comparison between proposed method and wildly-used method in terms of clinical decison making
 
-Monte Carlo simulation to valid if the proposed method overperforms the wildly used method
+- Monte Carlo simulation to validate if the proposed method overperforms the wildly used method
+- Unusualness: based on Latent scores vs. based on composite scores/FSIQ
 ---
 # Goal 3: Working exmaple illustration
 
