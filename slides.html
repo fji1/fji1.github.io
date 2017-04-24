@@ -22,7 +22,7 @@ class: center, middle, inverse, title-slide
 background-image: url(http://rnorm.me/Example.svg)
 background-position: 50% 95%
 background-size: 600px
-### The properties of large psychological assessments (e.g. WJ III, WISC/WAIS IV)
+### The properties of large psychological assessments (e.g. WJ IV, WISC/WAIS IV)
 
 - Multiple tests
 - Complicated relations
@@ -32,13 +32,29 @@ background-size: 600px
 So my thesis is titled apply conditional distributions to individuals, using latent variable models.
 My thesis is aimed to solve the problem that clininians come across in their day rountine when conducting psychological assessment and making clinical judgements.
 Psychological assessment is a process of testing that uses a combination of techniques to help arrive at some hypotheses about a person and their behavior, personality and capabilities. 
-For example, Woodcock-Johnson IV is a wildly used assessment battery that assess both cognitive abilities and academic achievements.
-For this kind of assessment, we should notice that it is not a easy job at all, many popular test batteries such us WAIS Four or WISC Four have many tests and very complicated relations between multiple tests.
 
+For example, Woodcock-Johnson IV is a wildly used assessment battery that assess both cognitive abilities and academic achievements.
+For this kind of assessment, we should notice that we have to combine multivariate information together to make decisions.
+Be sides the multiple tests, we should know the relations between different tests are complicated as the SEM plot, which illustrate only part of WJ IV.
+- Processing Speed (Gs): is the ability to perform automatic cognitive tasks, particularly when measured under pressure to maintain focused attention.
+- Comprehension-Knowledge (Gc): includes the breadth and depth of a person's acquired knowledge, the ability to communicate one's knowledge, and the ability to reason using previously learned experiences or procedures.
+- Fluid reasoning (Gf): includes the broad ability to reason, form concepts, and solve problems using unfamiliar information or novel procedures.
 ---
 background-image: url(http://rnorm.me/5.png)
 ---
 background-image: url(http://rnorm.me/6.png)
+
+---
+background-image: url(http://rnorm.me/0.svg)
+background-position: 50% 80%
+background-size: 600px
+# One simplified case
+- Learning disability is defined by having generally intact cognitive
+abilities but specific cognitive weakness(PA) explains the academic deficit(Reading Decoding).
+- Does this cognitive weakness really explain the academic deficit?
+???
+Here is one simplified case that clinians may come across when making decision about learning disability, learning disability is defined by having generally intact cognitive
+abilities but specific cognitive weaknesses cognitive processing deficits that explain the academic weakness. So lets say we have reading scores phonological awareness is the ability to hear phonemes and sounds distinctly people who have difficulty hearing sounds within words distinctly have difficulty understanding how the sounds correspond to letters and it makes it difficult to read this person has a 75 phonological awareness also at the bottom 5%. So for most of clinians if they saw a parttern like this, they may think their job is done that phonological awareness is theoretically related to reading decoding is much lower than GC and is consistent with reading decoding. This explanation correspond our intuition very well.
 
 ---
 background-image: url(http://rnorm.me/1.svg)
@@ -53,51 +69,27 @@ The aim of my current project is to solve a common problem that clinicians come 
 background-image: url(http://rnorm.me/3.jpg)
 
 ---
-background-image: url(http://rnorm.me/2.jpg)
-
-???
-Just one multiple regression could be misleading
----
-# The commonality of these problems
-- Human beings do not combine information of multiple variables well
-- Human beings do not reason well with probability 
----
 background-image: url(http://rnorm.me/4.svg)
 background-size: 900px
 
 *Move into latent level - even more misleading*
----
-# Solution: Profile Unusualness
-1. Quantify profile unusualness by using probabilities
-2. Quantify one score/result of test
-3. Quantify multiple scores/results of battery
-4. Software solution to automate the whole process
 ???
-We could quantify the how unusual we would observe the profile in population
+Just one multiple regression could be misleading, what if in real life we have a full batter to make decisions with and multipe outcome variables. What if we would like to know how this individual does on this three variables, how likely we have this kind of individual in population if we consider, lets say, condition on this cognitive scores combined together.
 ---
-# Technical Details
-- Latent Variable Estimation
-- Conditional Probability 
-- Mahalanobis Distance
-- Conditional Mahalanobis Distance
----
-# Latent score estimation methods
-
-1. Thurstone: Regression-based least squares method&lt;sup&gt;1&lt;/sup&gt;
-
-2. Bartlett's approach: Least squares method with correction of covariance between factors&lt;sup&gt;2&lt;/sup&gt;
-
-3. Empirical Bayes random effects estimates&lt;sup&gt;3&lt;/sup&gt; 
+# Problems &amp; Solutions
+- Human beings do not combine information of multiple variables well:(
+&gt; Mahalanobis Distance:)
 
 
+- Human beings do not reason well with probability:(
+&gt; Conditional Probility:)
 
-.footnote[
-[1] Thurstone, L. L. (1935). The vectors of the mind. Chicago, IL: University of Chicago Press.
-
-[2] Bartlett, M. S. (1937). The statistical conception of mental factors. *British Journal of Psychology*, 28, 97-104.
-
-[3] Estabrook, R., &amp; Neale, M. (2013). A comparison of factor score estimation methods in the presence of missing data: Reliability and an application to nicotine dependence. *Multivariate Behavioral research*, 48(1), 1-27.
-]
+- Doing stats is painful and learning curve is steep:(
+&gt; Software solution to automate the whole process:)
+???
+- Things are getting harder when we have multiple variables and even multiple outcomes
+- Intuition is against probility (that is why casino can always make money, we think we can beat them but got beaten very badly)
+- We could quantify the how unusual we would observe the profile in population
 ---
 
 &lt;iframe src="http://students.brown.edu/seeing-theory/compound-probability/index.html#third" width="100%" height="700px"&gt;&lt;/iframe&gt;
@@ -122,26 +114,44 @@ $$d_M^2 \sim \chi^2(k -c) $$
 2. Identify situations in which more testing is needed.
 ---
 # Goal of Current Study
-1. Choose from different latent score estimation methods to be used in our method
+1. Use simulated data to verify the proposed method performs works as intended
 
-2. Use simulated data to verify the proposed method performs better than wildly-used method
+2. Choose from different latent score estimation methods to be used in our method
 
 3.	Illustrate how to explain a profile in SEM for individuals to help clinicians make
 educated judgments.
 
 4.	Provide software solution to automate the process.
 ---
-# Goal 1: Comparison of different Latent score estimation methods
+### Goal 1: Use simulated data to verify the proposed method works as intended
 
-1. Thurstone: Regression-based least squares method (Thurstone, 1935)
+- Use simulations to validate if the method's probabilities are accurate.
 
-2. Bartlett's approach: Least squares method with correction of covariance between factors (Bartlett, 1937)
+- Investigate the conditions in which the conditional Mahalanobis distance is accurate.
 
-3. Empirical Bayes random effects estimates (Estabrook and Neale 2013)
 
 ???
-So, for my first goal, we should first notice there are many different ways to estimate latent scores like Thurstone's, Bartlett's and Bayes'.
-For the goal of this thesis, we should pick up the one that can produce most *validity*.
+
+For example, if the method says that there is a 5% chance that a latent score is greater than 100, the simulations will show if that is indeed the case.
+---
+# Goal 2: Comparison of different Latent score estimation methods
+
+1. Thurstone: Regression-based least squares method&lt;sup&gt;1&lt;/sup&gt;
+
+2. Bartlett's approach: Least squares method with correction of covariance between factors&lt;sup&gt;2&lt;/sup&gt;
+
+3. Empirical Bayes random effects estimates&lt;sup&gt;3&lt;/sup&gt; 
+
+
+
+.footnote[
+[1] Thurstone, L. L. (1935). The vectors of the mind. Chicago, IL: University of Chicago Press.
+
+[2] Bartlett, M. S. (1937). The statistical conception of mental factors. *British Journal of Psychology*, 28, 97-104.
+
+[3] Estabrook, R., &amp; Neale, M. (2013). A comparison of factor score estimation methods in the presence of missing data: Reliability and an application to nicotine dependence. *Multivariate Behavioral Research*, 48(1), 1-27.
+]
+???
 *Difference between Regression Scores and Sum/`Weighted Sum`*
 Thurstone (1935) used a least squares regression
 approach to predict factor score(s). Regression factor
@@ -175,13 +185,9 @@ inverse of the diagonal matrix of variances of the unique
 factor scores
 
 *EBA*
----
-### Goal 2: Comparison between proposed method and wildly-used method in terms of clinical decison making
 
-- Monte Carlo simulation to validate if the proposed method overperforms the wildly used method
-- Unusualness: based on Latent scores vs. based on composite scores/FSIQ
 ---
-# Goal 3: Working exmaple illustration
+# Goal 3: Working example illustration
 
 - For one individual test scores, how should we make use of our proposed method to explain test results and make clinical decision?
 
