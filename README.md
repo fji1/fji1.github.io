@@ -1,9 +1,7 @@
-# Feng's page for proposal meeting
+# Feng's page 
+[Regression](http://rnorm.me/regression.html)	
+ 
 
-There is nothing to show...
-
-Everything is under construction, including myself.
-
-
+---
 [Proposal Meeting](http://rnorm.me/slides.html)	
 [Shiny Interface](https://fengji.shinyapps.io/thesis/)
