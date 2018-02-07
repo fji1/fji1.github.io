@@ -9,12 +9,6 @@
 
 
 
-
-
-
-
-
-
 ---
 [Proposal Meeting](http://rnorm.me/slides.html)	
 
