@@ -224,118 +224,63 @@ div.tocify {
 </div>
 
 
-<div id="stan-setup" class="section level1">
-<h1>Stan Setup</h1>
-<pre class="stan"><code>data {
-int&lt;lower=0&gt; N;
-vector[N] y;
-vector[N] x;
-}
-parameters {
-real alpha;
-real beta;
-real&lt;lower=0&gt; sigma;
-}
-model {
-y ~ normal(alpha + beta * x, sigma);
-}</code></pre>
-</div>
-<div id="ols" class="section level1">
-<h1>OLS</h1>
-<pre class="r"><code>fit &lt;- lm(mathach  ~ ses, data = hsb)
-#summary(fit)
-fit %&gt;% tidy() %&gt;% kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">term</th>
-<th align="right">estimate</th>
-<th align="right">std.error</th>
-<th align="right">statistic</th>
-<th align="right">p.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">(Intercept)</td>
-<td align="right">12.74740</td>
-<td align="right">0.0756864</td>
-<td align="right">168.42379</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">ses</td>
-<td align="right">3.18387</td>
-<td align="right">0.0971209</td>
-<td align="right">32.78253</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="rstan" class="section level1">
-<h1>Rstan</h1>
-<pre class="r"><code>data &lt;- list(y = hsb$mathach, x = hsb$ses, N = nrow(hsb) ) 
-
-fit1 &lt;- sampling(
-  object = m_regression,  # Stan program
-  data = data,    # named list of data
-  chains = 4,             # number of Markov chains
-#  warmup = 1000,          # number of warmup iterations per chain
-  iter = 1000,            # total number of iterations per chain
-  cores = 2,              # number of cores (using 2 just for the vignette)
-  refresh = 1000 # show progress every 'refresh' iterations
-  )
-fit1 %&gt;% tidy() %&gt;% kable</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">term</th>
-<th align="right">estimate</th>
-<th align="right">std.error</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">alpha</td>
-<td align="right">12.744235</td>
-<td align="right">0.0753574</td>
-</tr>
-<tr class="even">
-<td align="left">beta</td>
-<td align="right">3.185991</td>
-<td align="right">0.0939837</td>
-</tr>
-<tr class="odd">
-<td align="left">sigma</td>
-<td align="right">6.415927</td>
-<td align="right">0.0540680</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="random-slope" class="section level1">
-<h1>Random Slope</h1>
-<pre class="stan"><code>  data {
-    int&lt;lower=0&gt; N;                   // the number of students
-    int&lt;lower=0&gt; J;                   // the number of schools
-    int&lt;lower=1,upper=J&gt; school[N];   // school identifier
-    vector[N] y;                      // outcome variable 
-  }
-  parameters {
-    vector[J] a;                      // random-intercept (J)
-    real mu_a;                        // grand-mean
-    real&lt;lower=0&gt; sigma_y;            // level-1 sd
-    real&lt;lower=0&gt; sigma_a;            // level-2 sd
-  }
- 
-  model {
-    mu_a ~ normal(0, 100);            // hyperprior
-    a ~ normal(mu_a, sigma_a);        // level-2 model
-    for (i in 1:N)
-        y[i] ~ normal(a[school[i]], sigma_y);       // level-1 model
-  }
-</code></pre>
+<!-- # Stan Setup -->
+<!-- ```{stan output.var="m_regression", highlight = T, tidy = T} -->
+<!-- data { -->
+<!-- int<lower=0> N; -->
+<!-- vector[N] y; -->
+<!-- vector[N] x; -->
+<!-- } -->
+<!-- parameters { -->
+<!-- real alpha; -->
+<!-- real beta; -->
+<!-- real<lower=0> sigma; -->
+<!-- } -->
+<!-- model { -->
+<!-- y ~ normal(alpha + beta * x, sigma); -->
+<!-- } -->
+<!-- ``` -->
+<!-- # OLS -->
+<!-- ```{r,comment="" } -->
+<!-- fit <- lm(mathach  ~ ses, data = hsb) -->
+<!-- #summary(fit) -->
+<!-- fit %>% tidy() %>% kable() -->
+<!-- ``` -->
+<!-- # Rstan -->
+<!-- ```{r,comment="" } -->
+<!-- data <- list(y = hsb$mathach, x = hsb$ses, N = nrow(hsb) )  -->
+<!-- fit1 <- sampling( -->
+<!--   object = m_regression,  # Stan program -->
+<!--   data = data,    # named list of data -->
+<!--   chains = 4,             # number of Markov chains -->
+<!-- #  warmup = 1000,          # number of warmup iterations per chain -->
+<!--   iter = 1000,            # total number of iterations per chain -->
+<!--   cores = 2,              # number of cores (using 2 just for the vignette) -->
+<!--   refresh = 1000 # show progress every 'refresh' iterations -->
+<!--   ) -->
+<!-- fit1 %>% tidy() %>% kable -->
+<!-- ``` -->
+<!-- # Random Slope -->
+<!-- ```{stan output.var="m_rs", highlight = T, tidy = T} -->
+<!--   data { -->
+<!--     int<lower=0> N;                   // the number of students -->
+<!--     int<lower=0> J;                   // the number of schools -->
+<!--     int<lower=1,upper=J> school[N];   // school identifier -->
+<!--     vector[N] y;                      // outcome variable  -->
+<!--   } -->
+<!--   parameters { -->
+<!--     vector[J] a;                      // random-intercept (J) -->
+<!--     real mu_a;                        // grand-mean -->
+<!--     real<lower=0> sigma_y;            // level-1 sd -->
+<!--     real<lower=0> sigma_a;            // level-2 sd -->
+<!--   } -->
+<!--   model { -->
+<!--     mu_a ~ normal(0, 100);            // hyperprior -->
+<!--     a ~ normal(mu_a, sigma_a);        // level-2 model -->
+<!--     for (i in 1:N) -->
+<!--         y[i] ~ normal(a[school[i]], sigma_y);       // level-1 model -->
+<!--   } -->
+<!-- ``` -->
 <pre class="r"><code># Generate school id
 key &lt;- 1:length(unique(hsb$schoolid))
 names(key) &lt;- unique(hsb$schoolid)
@@ -349,79 +294,225 @@ y &lt;- hsb$mathach                 # outcome variable
 x &lt;- hsb$female                 # student-level predictor
 hsb_data &lt;- list(J = J, N = N, school = schid, 
                       y = y) 
-RS &lt;- lmer(mathach ~ 1 + (1 | schid), data = hsb, REML = FALSE)
-summary(RS) </code></pre>
-<pre><code>Linear mixed model fit by maximum likelihood  ['lmerMod']
+# RS &lt;- lmer(mathach ~ 1 + (1 | schid), data = hsb, REML = FALSE)
+# summary(RS) </code></pre>
+<!-- # Normal Prior 1 -->
+<!-- ```{stan output.var="m_regression_norm", highlight = T, tidy = T} -->
+<!-- data { -->
+<!-- int<lower=0> N; -->
+<!-- vector[N] y; -->
+<!-- vector[N] x; -->
+<!-- } -->
+<!-- parameters { -->
+<!-- real alpha; -->
+<!-- real beta; -->
+<!-- real<lower=0> sigma; -->
+<!-- } -->
+<!-- model { -->
+<!-- alpha ~ normal(0,10); -->
+<!-- beta ~ normal(0,10);  -->
+<!-- y ~ normal(alpha + beta * x, sigma); -->
+<!-- } -->
+<!-- ``` -->
+<!-- ```{r,comment="" } -->
+<!-- stan_fit_1 <- sampling(object = m_regression_norm, data = data, iter = 2000, chains = 4, seed = 123) -->
+<!-- # Print a summary for a fitted model -->
+<!-- print(stan_fit_1, probs = c(0.025, 0.5, 0.975)) -->
+<!-- fit %>% tidy() %>% kable() -->
+<!-- summary(fit) -->
+<!-- ``` -->
+<!-- # Uniform Prior -->
+<!-- ```{stan output.var="m_regression_uni", highlight = T, tidy = T} -->
+<!-- data { -->
+<!-- int<lower=0> N; -->
+<!-- vector[N] y; -->
+<!-- vector[N] x; -->
+<!-- } -->
+<!-- parameters { -->
+<!-- real alpha; -->
+<!-- real beta; -->
+<!-- real<lower=0> sigma; -->
+<!-- } -->
+<!-- model { -->
+<!-- alpha ~ uniform(-5,5); -->
+<!-- beta ~ uniform(-5,5);   -->
+<!-- y ~ normal(alpha + beta * x, sigma); -->
+<!-- } -->
+<!-- ``` -->
+<!-- ```{r,comment="" } -->
+<!-- stan_fit_2 <- sampling(object = m_regression_uni, data = data, iter = 2000, chains = 4, seed = 123) -->
+<!-- # Print a summary for a fitted model -->
+<!-- print(stan_fit_2, probs = c(0.025, 0.5, 0.975)) -->
+<!-- fit %>% tidy() %>% kable() -->
+<!-- summary(fit) -->
+<!-- ``` -->
+<!-- # Normal Prior 2 -->
+<!-- ```{stan output.var="m_regression_normal1", highlight = T, tidy = T} -->
+<!-- data { -->
+<!-- int<lower=0> N; -->
+<!-- vector[N] y; -->
+<!-- vector[N] x; -->
+<!-- } -->
+<!-- parameters { -->
+<!-- real alpha; -->
+<!-- real beta; -->
+<!-- real<lower=0> sigma; -->
+<!-- } -->
+<!-- model { -->
+<!-- alpha ~ normal(0,1e6); -->
+<!-- beta ~ normal(0,1e6); -->
+<!-- y ~ normal(alpha + beta * x, sigma); -->
+<!-- } -->
+<!-- ``` -->
+<!-- ```{r,comment="" } -->
+<!-- stan_fit_3<- sampling(object = m_regression_normal1, data = data, iter = 2000, chains = 4, seed = 123) -->
+<!-- # Print a summary for a fitted model -->
+<!-- print(stan_fit_3, probs = c(0.025, 0.5, 0.975)) -->
+<!-- ``` -->
+<div id="rstanarm" class="section level1">
+<h1>rstanarm</h1>
+<pre class="r"><code>#rm(list = ls())
+
+hsb &lt;- within(hsb, {female_mean = ave(female, schid)})
+m_stanarm1 &lt;- stan_lmer(mathach ~ 1 + (1 | schid), data = hsb)</code></pre>
+<pre><code>
+SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
+
+Gradient evaluation took 0.001 seconds
+1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
+Adjust your expectations accordingly!
+
+
+Iteration:    1 / 2000 [  0%]  (Warmup)
+Iteration:  200 / 2000 [ 10%]  (Warmup)
+Iteration:  400 / 2000 [ 20%]  (Warmup)
+Iteration:  600 / 2000 [ 30%]  (Warmup)
+Iteration:  800 / 2000 [ 40%]  (Warmup)
+Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Iteration: 2000 / 2000 [100%]  (Sampling)
+
+ Elapsed Time: 36.741 seconds (Warm-up)
+               24.304 seconds (Sampling)
+               61.045 seconds (Total)
+
+
+SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
+
+Gradient evaluation took 0.001 seconds
+1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
+Adjust your expectations accordingly!
+
+
+Iteration:    1 / 2000 [  0%]  (Warmup)
+Iteration:  200 / 2000 [ 10%]  (Warmup)
+Iteration:  400 / 2000 [ 20%]  (Warmup)
+Iteration:  600 / 2000 [ 30%]  (Warmup)
+Iteration:  800 / 2000 [ 40%]  (Warmup)
+Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Iteration: 2000 / 2000 [100%]  (Sampling)
+
+ Elapsed Time: 38.465 seconds (Warm-up)
+               32.195 seconds (Sampling)
+               70.66 seconds (Total)
+
+
+SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
+
+Gradient evaluation took 0.001 seconds
+1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
+Adjust your expectations accordingly!
+
+
+Iteration:    1 / 2000 [  0%]  (Warmup)
+Iteration:  200 / 2000 [ 10%]  (Warmup)
+Iteration:  400 / 2000 [ 20%]  (Warmup)
+Iteration:  600 / 2000 [ 30%]  (Warmup)
+Iteration:  800 / 2000 [ 40%]  (Warmup)
+Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Iteration: 2000 / 2000 [100%]  (Sampling)
+
+ Elapsed Time: 43.951 seconds (Warm-up)
+               29.347 seconds (Sampling)
+               73.298 seconds (Total)
+
+
+SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
+
+Gradient evaluation took 0.001 seconds
+1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
+Adjust your expectations accordingly!
+
+
+Iteration:    1 / 2000 [  0%]  (Warmup)
+Iteration:  200 / 2000 [ 10%]  (Warmup)
+Iteration:  400 / 2000 [ 20%]  (Warmup)
+Iteration:  600 / 2000 [ 30%]  (Warmup)
+Iteration:  800 / 2000 [ 40%]  (Warmup)
+Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Iteration: 2000 / 2000 [100%]  (Sampling)
+
+ Elapsed Time: 62.367 seconds (Warm-up)
+               30.445 seconds (Sampling)
+               92.812 seconds (Total)</code></pre>
+<pre class="r"><code>m_stanarm1</code></pre>
+<pre><code>stan_lmer
+ family:       gaussian [identity]
+ formula:      mathach ~ 1 + (1 | schid)
+ observations: 7185
+------
+            Median MAD_SD
+(Intercept) 12.6    0.2  
+sigma        6.3    0.1  
+
+Error terms:
+ Groups   Name        Std.Dev.
+ schid    (Intercept) 3.0     
+ Residual             6.3     
+Num. levels: schid 160 
+
+Sample avg. posterior predictive distribution of y:
+         Median MAD_SD
+mean_PPD 12.7    0.1  
+
+------
+For info on the priors used see help('prior_summary.stanreg').</code></pre>
+<pre class="r"><code>m_1 &lt;- lmer(mathach ~ 1 + (1 | schid), data = hsb)
+m_1</code></pre>
+<pre><code>Linear mixed model fit by REML ['lmerMod']
 Formula: mathach ~ 1 + (1 | schid)
    Data: hsb
-
-     AIC      BIC   logLik deviance df.resid 
- 47121.8  47142.4 -23557.9  47115.8     7182 
-
-Scaled residuals: 
-     Min       1Q   Median       3Q      Max 
--3.06262 -0.75365  0.02676  0.76070  2.74184 
-
+REML criterion at convergence: 47116.79
 Random effects:
- Groups   Name        Variance Std.Dev.
- schid    (Intercept)  8.553   2.925   
- Residual             39.148   6.257   
+ Groups   Name        Std.Dev.
+ schid    (Intercept) 2.935   
+ Residual             6.257   
 Number of obs: 7185, groups:  schid, 160
-
-Fixed effects:
-            Estimate Std. Error t value
-(Intercept)  12.6371     0.2436   51.87</code></pre>
-<pre class="r"><code># Fit varying-intercept model with no predictors using Stan
-RS_stan &lt;- sampling(
-  object = m_rs,  # Stan program
-  data = hsb_data,    # named list of data
-  chains = 4,             # number of Markov chains
-#  warmup = 1000,          # number of warmup iterations per chain
-  iter = 1000,            # total number of iterations per chain
-  cores = 2,              # number of cores (using 2 just for the vignette)
-  refresh = 1000 # show progress every 'refresh' iterations
-  )</code></pre>
-<pre><code>Warning: There were 6 transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See
-http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded</code></pre>
-<pre><code>Warning: Examine the pairs() plot to diagnose sampling problems</code></pre>
-<pre class="r"><code># Print a summary for a fitted model
-print(RS_stan, probs = c(0.025, 0.5, 0.975), 
-      pars = c(&quot;mu_a&quot;, &quot;sigma_a&quot;, &quot;sigma_y&quot;, &quot;lp__&quot;))</code></pre>
-<pre><code>Inference for Stan model: ac831d5a5bbfcabcc0407c97465c74c6.
-4 chains, each with iter=1000; warmup=500; thin=1; 
-post-warmup draws per chain=500, total post-warmup draws=2000.
-
-             mean se_mean   sd      2.5%       50%     97.5% n_eff Rhat
-mu_a        12.63    0.01 0.25     12.16     12.63     13.13  2000    1
-sigma_a      2.97    0.00 0.18      2.63      2.96      3.35  2000    1
-sigma_y      6.26    0.00 0.05      6.16      6.26      6.36  2000    1
-lp__    -17017.98    0.35 9.06 -17036.62 -17017.62 -17000.73   672    1
-
-Samples were drawn using NUTS(diag_e) at Thu Feb 15 13:28:12 2018.
-For each parameter, n_eff is a crude measure of effective sample size,
-and Rhat is the potential scale reduction factor on split chains (at 
-convergence, Rhat=1).</code></pre>
-</div>
-<div id="normal-prior-1" class="section level1">
-<h1>Normal Prior 1</h1>
-<pre class="stan"><code>data {
-int&lt;lower=0&gt; N;
-vector[N] y;
-vector[N] x;
-}
-parameters {
-real alpha;
-real beta;
-real&lt;lower=0&gt; sigma;
-}
-model {
-alpha ~ normal(0,10);
-beta ~ normal(0,10); 
-y ~ normal(alpha + beta * x, sigma);
-}</code></pre>
-<pre class="r"><code>stan_fit_1 &lt;- sampling(object = m_regression_norm, data = data, iter = 2000, chains = 4, seed = 123)</code></pre>
+Fixed Effects:
+(Intercept)  
+      12.64  </code></pre>
+<pre class="r"><code>m_stanarm2 &lt;- stan_lmer(mathach ~ female + (1 | schid), data = hsb)</code></pre>
 <pre><code>
-SAMPLING FOR MODEL 'a320f383bd0ef2ada2522d189638454a' NOW (CHAIN 1).
+SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
 
 Gradient evaluation took 0.001 seconds
 1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
@@ -441,15 +532,15 @@ Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
- Elapsed Time: 1.646 seconds (Warm-up)
-               1.713 seconds (Sampling)
-               3.359 seconds (Total)
+ Elapsed Time: 55.426 seconds (Warm-up)
+               34.647 seconds (Sampling)
+               90.073 seconds (Total)
 
 
-SAMPLING FOR MODEL 'a320f383bd0ef2ada2522d189638454a' NOW (CHAIN 2).
+SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
 
-Gradient evaluation took 0 seconds
-1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+Gradient evaluation took 0.002 seconds
+1000 transitions using 10 leapfrog steps per transition would take 20 seconds.
 Adjust your expectations accordingly!
 
 
@@ -466,12 +557,12 @@ Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
- Elapsed Time: 1.733 seconds (Warm-up)
-               1.148 seconds (Sampling)
-               2.881 seconds (Total)
+ Elapsed Time: 49.831 seconds (Warm-up)
+               35.392 seconds (Sampling)
+               85.223 seconds (Total)
 
 
-SAMPLING FOR MODEL 'a320f383bd0ef2ada2522d189638454a' NOW (CHAIN 3).
+SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
 
 Gradient evaluation took 0.001 seconds
 1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
@@ -491,15 +582,15 @@ Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
- Elapsed Time: 1.768 seconds (Warm-up)
-               1.533 seconds (Sampling)
-               3.301 seconds (Total)
+ Elapsed Time: 54.203 seconds (Warm-up)
+               34.003 seconds (Sampling)
+               88.206 seconds (Total)
 
 
-SAMPLING FOR MODEL 'a320f383bd0ef2ada2522d189638454a' NOW (CHAIN 4).
+SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
 
-Gradient evaluation took 0 seconds
-1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+Gradient evaluation took 0.001 seconds
+1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
 Adjust your expectations accordingly!
 
 
@@ -516,96 +607,52 @@ Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
- Elapsed Time: 1.718 seconds (Warm-up)
-               1.134 seconds (Sampling)
-               2.852 seconds (Total)</code></pre>
-<pre class="r"><code># Print a summary for a fitted model
-print(stan_fit_1, probs = c(0.025, 0.5, 0.975))</code></pre>
-<pre><code>Inference for Stan model: a320f383bd0ef2ada2522d189638454a.
-4 chains, each with iter=2000; warmup=1000; thin=1; 
-post-warmup draws per chain=1000, total post-warmup draws=4000.
+ Elapsed Time: 46.12 seconds (Warm-up)
+               22.514 seconds (Sampling)
+               68.634 seconds (Total)</code></pre>
+<pre class="r"><code>m_stanarm2</code></pre>
+<pre><code>stan_lmer
+ family:       gaussian [identity]
+ formula:      mathach ~ female + (1 | schid)
+ observations: 7185
+------
+            Median MAD_SD
+(Intercept) 13.3    0.3  
+female      -1.4    0.2  
+sigma        6.2    0.1  
 
-           mean se_mean   sd      2.5%       50%     97.5% n_eff Rhat
-alpha     12.75    0.00 0.08     12.60     12.75     12.90  3969    1
-beta       3.18    0.00 0.10      2.99      3.18      3.37  4000    1
-sigma      6.42    0.00 0.05      6.31      6.42      6.52  4000    1
-lp__  -16946.89    0.03 1.17 -16949.88 -16946.59 -16945.52  2021    1
+Error terms:
+ Groups   Name        Std.Dev.
+ schid    (Intercept) 2.9     
+ Residual             6.2     
+Num. levels: schid 160 
 
-Samples were drawn using NUTS(diag_e) at Thu Feb 15 13:29:04 2018.
-For each parameter, n_eff is a crude measure of effective sample size,
-and Rhat is the potential scale reduction factor on split chains (at 
-convergence, Rhat=1).</code></pre>
-<pre class="r"><code>fit %&gt;% tidy() %&gt;% kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">term</th>
-<th align="right">estimate</th>
-<th align="right">std.error</th>
-<th align="right">statistic</th>
-<th align="right">p.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">(Intercept)</td>
-<td align="right">12.74740</td>
-<td align="right">0.0756864</td>
-<td align="right">168.42379</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">ses</td>
-<td align="right">3.18387</td>
-<td align="right">0.0971209</td>
-<td align="right">32.78253</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-<pre class="r"><code>summary(fit)</code></pre>
+Sample avg. posterior predictive distribution of y:
+         Median MAD_SD
+mean_PPD 12.7    0.1  
+
+------
+For info on the priors used see help('prior_summary.stanreg').</code></pre>
+<pre class="r"><code>m_2 &lt;- lmer(mathach ~ female + (1 | schid), data = hsb)
+m_2</code></pre>
+<pre><code>Linear mixed model fit by REML ['lmerMod']
+Formula: mathach ~ female + (1 | schid)
+   Data: hsb
+REML criterion at convergence: 47056.04
+Random effects:
+ Groups   Name        Std.Dev.
+ schid    (Intercept) 2.858   
+ Residual             6.233   
+Number of obs: 7185, groups:  schid, 160
+Fixed Effects:
+(Intercept)       female  
+     13.345       -1.359  </code></pre>
+<pre class="r"><code>m_stanarm3 &lt;- stan_lmer(mathach ~ female + (1 + female_mean | schid), data = hsb)</code></pre>
 <pre><code>
-Call:
-lm(formula = mathach ~ ses, data = hsb)
+SAMPLING FOR MODEL 'continuous' NOW (CHAIN 1).
 
-Residuals:
-     Min       1Q   Median       3Q      Max 
--19.4382  -4.7580   0.2334   5.0649  15.9007 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 12.74740    0.07569  168.42   &lt;2e-16 ***
-ses          3.18387    0.09712   32.78   &lt;2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 6.416 on 7183 degrees of freedom
-Multiple R-squared:  0.1301,    Adjusted R-squared:   0.13 
-F-statistic:  1075 on 1 and 7183 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-<div id="uniform-prior" class="section level1">
-<h1>Uniform Prior</h1>
-<pre class="stan"><code>data {
-int&lt;lower=0&gt; N;
-vector[N] y;
-vector[N] x;
-}
-parameters {
-real alpha;
-real beta;
-real&lt;lower=0&gt; sigma;
-}
-model {
-alpha ~ uniform(-5,5);
-beta ~ uniform(-5,5);  
-y ~ normal(alpha + beta * x, sigma);
-}</code></pre>
-<pre class="r"><code>stan_fit_2 &lt;- sampling(object = m_regression_uni, data = data, iter = 2000, chains = 4, seed = 123)</code></pre>
-<pre><code>
-SAMPLING FOR MODEL '6401245194ed782c4b234f46d524c7d9' NOW (CHAIN 1).
-
-Gradient evaluation took 0.001 seconds
-1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
+Gradient evaluation took 0.004 seconds
+1000 transitions using 10 leapfrog steps per transition would take 40 seconds.
 Adjust your expectations accordingly!
 
 
@@ -622,15 +669,15 @@ Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
- Elapsed Time: 2.702 seconds (Warm-up)
-               3.632 seconds (Sampling)
-               6.334 seconds (Total)
+ Elapsed Time: 336.674 seconds (Warm-up)
+               67.501 seconds (Sampling)
+               404.175 seconds (Total)
 
 
-SAMPLING FOR MODEL '6401245194ed782c4b234f46d524c7d9' NOW (CHAIN 2).
+SAMPLING FOR MODEL 'continuous' NOW (CHAIN 2).
 
-Gradient evaluation took 0 seconds
-1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+Gradient evaluation took 0.002 seconds
+1000 transitions using 10 leapfrog steps per transition would take 20 seconds.
 Adjust your expectations accordingly!
 
 
@@ -647,15 +694,15 @@ Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
- Elapsed Time: 2.398 seconds (Warm-up)
-               1.347 seconds (Sampling)
-               3.745 seconds (Total)
+ Elapsed Time: 213.542 seconds (Warm-up)
+               255.163 seconds (Sampling)
+               468.705 seconds (Total)
 
 
-SAMPLING FOR MODEL '6401245194ed782c4b234f46d524c7d9' NOW (CHAIN 3).
+SAMPLING FOR MODEL 'continuous' NOW (CHAIN 3).
 
-Gradient evaluation took 0 seconds
-1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+Gradient evaluation took 0.006 seconds
+1000 transitions using 10 leapfrog steps per transition would take 60 seconds.
 Adjust your expectations accordingly!
 
 
@@ -672,15 +719,15 @@ Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
- Elapsed Time: 2.429 seconds (Warm-up)
-               3.39 seconds (Sampling)
-               5.819 seconds (Total)
+ Elapsed Time: 234.71 seconds (Warm-up)
+               181.251 seconds (Sampling)
+               415.961 seconds (Total)
 
 
-SAMPLING FOR MODEL '6401245194ed782c4b234f46d524c7d9' NOW (CHAIN 4).
+SAMPLING FOR MODEL 'continuous' NOW (CHAIN 4).
 
-Gradient evaluation took 0.001 seconds
-1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
+Gradient evaluation took 0.002 seconds
+1000 transitions using 10 leapfrog steps per transition would take 20 seconds.
 Adjust your expectations accordingly!
 
 
@@ -697,123 +744,117 @@ Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
- Elapsed Time: 2.567 seconds (Warm-up)
-               4.841 seconds (Sampling)
-               7.408 seconds (Total)</code></pre>
-<pre><code>Warning: There were 3513 divergent transitions after warmup. Increasing adapt_delta above 0.8 may help. See
+ Elapsed Time: 190.843 seconds (Warm-up)
+               132.607 seconds (Sampling)
+               323.45 seconds (Total)</code></pre>
+<pre><code>Warning: There were 2 divergent transitions after warmup. Increasing adapt_delta above 0.95 may help. See
 http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code></pre>
-<pre><code>Warning: There were 1 chains where the estimated Bayesian Fraction of Missing Information was low. See
-http://mc-stan.org/misc/warnings.html#bfmi-low</code></pre>
 <pre><code>Warning: Examine the pairs() plot to diagnose sampling problems</code></pre>
-<pre class="r"><code># Print a summary for a fitted model
-print(stan_fit_2, probs = c(0.025, 0.5, 0.975))</code></pre>
-<pre><code>Inference for Stan model: 6401245194ed782c4b234f46d524c7d9.
-4 chains, each with iter=2000; warmup=1000; thin=1; 
-post-warmup draws per chain=1000, total post-warmup draws=4000.
+<pre class="r"><code>m_stanarm3</code></pre>
+<pre><code>stan_lmer
+ family:       gaussian [identity]
+ formula:      mathach ~ female + (1 + female_mean | schid)
+ observations: 7185
+------
+            Median MAD_SD
+(Intercept) 13.3    0.3  
+female      -1.3    0.2  
+sigma        6.2    0.1  
 
-           mean se_mean   sd      2.5%       50%     97.5% n_eff Rhat
-alpha      5.00    0.00 0.00      4.99      5.00      5.00   305 1.01
-beta       3.18    0.02 0.17      2.80      3.17      3.48    85 1.05
-sigma     10.06    0.01 0.08      9.90     10.06     10.23   170 1.02
-lp__  -20178.13    0.22 2.18 -20182.44 -20177.68 -20176.29    95 1.04
+Error terms:
+ Groups   Name        Std.Dev. Corr 
+ schid    (Intercept) 3.2           
+          female_mean 2.2      -0.50
+ Residual             6.2           
+Num. levels: schid 160 
 
-Samples were drawn using NUTS(diag_e) at Thu Feb 15 13:30:06 2018.
-For each parameter, n_eff is a crude measure of effective sample size,
-and Rhat is the potential scale reduction factor on split chains (at 
-convergence, Rhat=1).</code></pre>
-<pre class="r"><code>fit %&gt;% tidy() %&gt;% kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">term</th>
-<th align="right">estimate</th>
-<th align="right">std.error</th>
-<th align="right">statistic</th>
-<th align="right">p.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">(Intercept)</td>
-<td align="right">12.74740</td>
-<td align="right">0.0756864</td>
-<td align="right">168.42379</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">ses</td>
-<td align="right">3.18387</td>
-<td align="right">0.0971209</td>
-<td align="right">32.78253</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-<pre class="r"><code>summary(fit)</code></pre>
-<pre><code>
-Call:
-lm(formula = mathach ~ ses, data = hsb)
+Sample avg. posterior predictive distribution of y:
+         Median MAD_SD
+mean_PPD 12.7    0.1  
 
-Residuals:
-     Min       1Q   Median       3Q      Max 
--19.4382  -4.7580   0.2334   5.0649  15.9007 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 12.74740    0.07569  168.42   &lt;2e-16 ***
-ses          3.18387    0.09712   32.78   &lt;2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 6.416 on 7183 degrees of freedom
-Multiple R-squared:  0.1301,    Adjusted R-squared:   0.13 
-F-statistic:  1075 on 1 and 7183 DF,  p-value: &lt; 2.2e-16</code></pre>
+------
+For info on the priors used see help('prior_summary.stanreg').</code></pre>
+<pre class="r"><code>m_3 &lt;- lmer(mathach ~ female + (1 + female_mean | schid), data = hsb)
+m_3</code></pre>
+<pre><code>Linear mixed model fit by REML ['lmerMod']
+Formula: mathach ~ female + (1 + female_mean | schid)
+   Data: hsb
+REML criterion at convergence: 47054.29
+Random effects:
+ Groups   Name        Std.Dev. Corr 
+ schid    (Intercept) 3.418         
+          female_mean 2.562    -0.63
+ Residual             6.233         
+Number of obs: 7185, groups:  schid, 160
+Fixed Effects:
+(Intercept)       female  
+     13.240       -1.335  </code></pre>
 </div>
-<div id="normal-prior-2" class="section level1">
-<h1>Normal Prior 2</h1>
+<div id="lkj-on-gcse-through-cholesky-factorization" class="section level1">
+<h1>LKJ on GCSE: through Cholesky Factorization</h1>
 <pre class="stan"><code>data {
-int&lt;lower=0&gt; N;
-vector[N] y;
-vector[N] x;
+  int&lt;lower=1&gt; N;
+  real y[N];
+  real x[N];    //predictor
+  real x_mean[N];    //group level predictor
+  int&lt;lower=1&gt; J;                  //73
+  int&lt;lower=1, upper=J&gt; school[N];   //school id
+
 }
+
 parameters {
-real alpha;
-real beta;
-real&lt;lower=0&gt; sigma;
+  vector[2] beta;            //fixed intercept and slope
+  real&lt;lower=0&gt; sigma_e;     //error sd
+  vector&lt;lower=0&gt;[2] sigma_u;     //school sd
+  cholesky_factor_corr[2] L_u;
+  matrix[2,J] z_u;
 }
+
+transformed parameters{
+  matrix[2,J] u;
+  u = diag_pre_multiply(sigma_u,L_u)*z_u;   //school random effects
+}
+
+
 model {
-alpha ~ normal(0,1e6);
-beta ~ normal(0,1e6);
-y ~ normal(alpha + beta * x, sigma);
-}</code></pre>
-<pre class="r"><code>stan_fit_3&lt;- sampling(object = m_regression_normal1, data = data, iter = 2000, chains = 4, seed = 123)</code></pre>
+  real mu;
+  L_u ~ lkj_corr_cholesky(1.0);
+  to_vector(z_u) ~ normal(0,1);
+  for (i in 1:N){
+    mu = beta[1] + u[1, school[i]]   + (beta[2] + u[2,school[i]])*x[i];
+    y[i] ~ normal(mu,sigma_e);
+  }
+}
+</code></pre>
+<pre class="r"><code># Use example dataset from mlmRev package: GCSE exam score
+data(Gcsemv, package = &quot;mlmRev&quot;)
+Gcse.course &lt;- subset(Gcsemv, select = c(school, student, gender, course))
+# Exclude cases containing missing values 
+GCSE &lt;- Gcse.course[complete.cases(Gcse.course), ]
+# Generate school id
+key &lt;- 1:length(unique(GCSE$school))
+names(key) &lt;- unique(GCSE$school)
+GCSE$schid &lt;- key[as.factor(GCSE$school)]
+
+# Generate student id
+GCSE$stdid &lt;- 1:length(GCSE$student)  
+
+# Creating a dummy variable for being female and its school mean 
+GCSE$female &lt;- ifelse(GCSE$gender == &quot;F&quot;, 1, 0)
+GCSE &lt;- within(GCSE, {female_mean = ave(female, schid)})
+# Define Stan data objects
+J &lt;- length(unique(GCSE$schid))  # the number of schools
+N &lt;- length(GCSE$stdid)          # the number of students
+schid &lt;- GCSE$schid              # school identifier
+y &lt;- GCSE$course                 # outcome variable
+x &lt;- GCSE$female                 # student-level predictor
+x_mean &lt;- GCSE$female_mean       # school-level predictor
+GCSE.datalist &lt;- list(J = J, N = N, school = schid, 
+                      y = y, x = x, x_mean = x_mean ) 
+options(max.print=1000000) 
+lkj_stan &lt;- sampling(object = lmm, data = GCSE.datalist, iter = 2000, chains = 4, seed = 123)</code></pre>
 <pre><code>
-SAMPLING FOR MODEL '9677625fd3879acdee7fd049dacf2a79' NOW (CHAIN 1).
-
-Gradient evaluation took 0.001 seconds
-1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
-Adjust your expectations accordingly!
-
-
-Iteration:    1 / 2000 [  0%]  (Warmup)
-Iteration:  200 / 2000 [ 10%]  (Warmup)
-Iteration:  400 / 2000 [ 20%]  (Warmup)
-Iteration:  600 / 2000 [ 30%]  (Warmup)
-Iteration:  800 / 2000 [ 40%]  (Warmup)
-Iteration: 1000 / 2000 [ 50%]  (Warmup)
-Iteration: 1001 / 2000 [ 50%]  (Sampling)
-Iteration: 1200 / 2000 [ 60%]  (Sampling)
-Iteration: 1400 / 2000 [ 70%]  (Sampling)
-Iteration: 1600 / 2000 [ 80%]  (Sampling)
-Iteration: 1800 / 2000 [ 90%]  (Sampling)
-Iteration: 2000 / 2000 [100%]  (Sampling)
-
- Elapsed Time: 1.592 seconds (Warm-up)
-               1.613 seconds (Sampling)
-               3.205 seconds (Total)
-
-
-SAMPLING FOR MODEL '9677625fd3879acdee7fd049dacf2a79' NOW (CHAIN 2).
+SAMPLING FOR MODEL '9f0a9e584183f9c4d5e623e63a93db68' NOW (CHAIN 1).
 
 Gradient evaluation took 0 seconds
 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
@@ -833,12 +874,12 @@ Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
- Elapsed Time: 1.746 seconds (Warm-up)
-               1.991 seconds (Sampling)
-               3.737 seconds (Total)
+ Elapsed Time: 6.434 seconds (Warm-up)
+               5.144 seconds (Sampling)
+               11.578 seconds (Total)
 
 
-SAMPLING FOR MODEL '9677625fd3879acdee7fd049dacf2a79' NOW (CHAIN 3).
+SAMPLING FOR MODEL '9f0a9e584183f9c4d5e623e63a93db68' NOW (CHAIN 2).
 
 Gradient evaluation took 0 seconds
 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
@@ -858,12 +899,37 @@ Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
- Elapsed Time: 1.755 seconds (Warm-up)
-               2.503 seconds (Sampling)
-               4.258 seconds (Total)
+ Elapsed Time: 7.085 seconds (Warm-up)
+               5.091 seconds (Sampling)
+               12.176 seconds (Total)
 
 
-SAMPLING FOR MODEL '9677625fd3879acdee7fd049dacf2a79' NOW (CHAIN 4).
+SAMPLING FOR MODEL '9f0a9e584183f9c4d5e623e63a93db68' NOW (CHAIN 3).
+
+Gradient evaluation took 0 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+Adjust your expectations accordingly!
+
+
+Iteration:    1 / 2000 [  0%]  (Warmup)
+Iteration:  200 / 2000 [ 10%]  (Warmup)
+Iteration:  400 / 2000 [ 20%]  (Warmup)
+Iteration:  600 / 2000 [ 30%]  (Warmup)
+Iteration:  800 / 2000 [ 40%]  (Warmup)
+Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Iteration: 2000 / 2000 [100%]  (Sampling)
+
+ Elapsed Time: 6.08 seconds (Warm-up)
+               5.154 seconds (Sampling)
+               11.234 seconds (Total)
+
+
+SAMPLING FOR MODEL '9f0a9e584183f9c4d5e623e63a93db68' NOW (CHAIN 4).
 
 Gradient evaluation took 0.001 seconds
 1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
@@ -883,25 +949,695 @@ Iteration: 1600 / 2000 [ 80%]  (Sampling)
 Iteration: 1800 / 2000 [ 90%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
- Elapsed Time: 1.73 seconds (Warm-up)
-               1.651 seconds (Sampling)
-               3.381 seconds (Total)</code></pre>
-<pre class="r"><code># Print a summary for a fitted model
-print(stan_fit_3, probs = c(0.025, 0.5, 0.975))</code></pre>
-<pre><code>Inference for Stan model: 9677625fd3879acdee7fd049dacf2a79.
+ Elapsed Time: 6.46 seconds (Warm-up)
+               4.996 seconds (Sampling)
+               11.456 seconds (Total)</code></pre>
+<pre class="r"><code>print(lkj_stan)</code></pre>
+<pre><code>Inference for Stan model: 9f0a9e584183f9c4d5e623e63a93db68.
 4 chains, each with iter=2000; warmup=1000; thin=1; 
 post-warmup draws per chain=1000, total post-warmup draws=4000.
 
-           mean se_mean   sd      2.5%       50%     97.5% n_eff Rhat
-alpha     12.75    0.00 0.08     12.60     12.75     12.90  3408    1
-beta       3.19    0.00 0.10      3.00      3.19      3.37  3690    1
-sigma      6.42    0.00 0.05      6.31      6.42      6.52  4000    1
-lp__  -16946.04    0.03 1.21 -16949.25 -16945.73 -16944.65  2081    1
+               mean se_mean    sd     2.5%      25%      50%      75%
+beta[1]       69.48    0.04  1.43    66.55    68.53    69.51    70.40
+beta[2]        7.10    0.03  1.16     4.88     6.32     7.10     7.85
+sigma_e       13.05    0.00  0.24    12.60    12.89    13.05    13.21
+sigma_u[1]    10.35    0.03  1.14     8.29     9.55    10.28    11.07
+sigma_u[2]     7.07    0.03  1.11     5.01     6.31     7.03     7.79
+L_u[1,1]       1.00    0.00  0.00     1.00     1.00     1.00     1.00
+L_u[1,2]       0.00    0.00  0.00     0.00     0.00     0.00     0.00
+L_u[2,1]      -0.49    0.00  0.13    -0.71    -0.58    -0.50    -0.41
+L_u[2,2]       0.86    0.00  0.07     0.70     0.81     0.87     0.91
+z_u[1,1]      -1.87    0.01  0.58    -3.05    -2.25    -1.85    -1.48
+z_u[1,2]      -1.97    0.01  0.35    -2.70    -2.20    -1.96    -1.72
+z_u[1,3]       1.02    0.01  0.44     0.20     0.72     1.02     1.32
+z_u[1,4]       0.05    0.01  0.47    -0.89    -0.27     0.05     0.37
+z_u[1,5]      -0.33    0.01  0.68    -1.67    -0.79    -0.34     0.14
+z_u[1,6]       0.76    0.01  0.46    -0.14     0.45     0.76     1.07
+z_u[1,7]       0.02    0.01  0.59    -1.15    -0.37     0.03     0.42
+z_u[1,8]       1.12    0.00  0.32     0.53     0.90     1.10     1.32
+z_u[1,9]      -1.04    0.01  0.45    -1.94    -1.34    -1.03    -0.73
+z_u[1,10]     -0.35    0.00  0.28    -0.91    -0.54    -0.35    -0.17
+z_u[1,11]     -1.04    0.01  0.53    -2.08    -1.39    -1.04    -0.68
+z_u[1,12]     -1.82    0.01  0.39    -2.59    -2.08    -1.81    -1.55
+z_u[1,13]      1.62    0.01  0.45     0.74     1.31     1.62     1.92
+z_u[1,14]      0.20    0.01  0.68    -1.15    -0.25     0.20     0.66
+z_u[1,15]      1.04    0.01  0.38     0.31     0.79     1.04     1.29
+z_u[1,16]      1.55    0.01  0.39     0.82     1.29     1.54     1.80
+z_u[1,17]      0.49    0.01  0.45    -0.37     0.20     0.48     0.79
+z_u[1,18]     -0.65    0.01  0.48    -1.60    -0.97    -0.65    -0.31
+z_u[1,19]      0.40    0.01  0.33    -0.23     0.19     0.40     0.62
+z_u[1,20]      1.09    0.01  0.28     0.56     0.89     1.08     1.27
+z_u[1,21]      0.40    0.01  0.37    -0.34     0.14     0.40     0.65
+z_u[1,22]      1.34    0.01  0.56     0.26     0.95     1.32     1.72
+z_u[1,23]     -0.64    0.01  0.43    -1.48    -0.93    -0.64    -0.36
+z_u[1,24]     -0.04    0.01  0.59    -1.21    -0.43    -0.04     0.34
+z_u[1,25]     -0.14    0.01  0.40    -0.94    -0.41    -0.14     0.12
+z_u[1,26]      1.07    0.01  0.36     0.38     0.82     1.06     1.31
+z_u[1,27]     -1.29    0.01  0.36    -2.03    -1.53    -1.28    -1.05
+z_u[1,28]      0.56    0.00  0.30    -0.01     0.36     0.56     0.75
+z_u[1,29]     -0.78    0.01  0.36    -1.51    -1.01    -0.78    -0.54
+z_u[1,30]      1.16    0.01  0.45     0.33     0.85     1.15     1.45
+z_u[1,31]     -0.53    0.01  0.62    -1.75    -0.94    -0.53    -0.10
+z_u[1,32]      1.02    0.01  0.57    -0.09     0.63     1.02     1.40
+z_u[1,33]      0.16    0.01  0.69    -1.19    -0.30     0.17     0.62
+z_u[1,34]     -0.94    0.01  0.51    -1.98    -1.28    -0.92    -0.59
+z_u[1,35]     -0.25    0.01  0.43    -1.14    -0.54    -0.24     0.03
+z_u[1,36]      1.12    0.01  0.49     0.17     0.79     1.12     1.44
+z_u[1,37]      0.19    0.00  0.27    -0.34     0.01     0.19     0.37
+z_u[1,38]      0.31    0.01  0.37    -0.42     0.06     0.30     0.55
+z_u[1,39]     -0.01    0.01  0.48    -0.94    -0.34     0.00     0.31
+z_u[1,40]     -0.11    0.01  0.34    -0.78    -0.34    -0.11     0.12
+z_u[1,41]      0.35    0.01  0.32    -0.26     0.13     0.35     0.57
+z_u[1,42]     -0.84    0.00  0.27    -1.39    -1.02    -0.83    -0.65
+z_u[1,43]      0.41    0.01  0.64    -0.85    -0.03     0.40     0.84
+z_u[1,44]     -1.35    0.01  0.67    -2.70    -1.80    -1.35    -0.92
+z_u[1,45]     -0.40    0.01  0.51    -1.41    -0.73    -0.41    -0.06
+z_u[1,46]     -0.30    0.01  0.38    -1.02    -0.56    -0.31    -0.04
+z_u[1,47]     -1.49    0.01  0.38    -2.26    -1.74    -1.48    -1.23
+z_u[1,48]      0.66    0.01  0.34     0.03     0.42     0.65     0.89
+z_u[1,49]      0.20    0.01  0.49    -0.74    -0.14     0.21     0.53
+z_u[1,50]      1.22    0.01  0.34     0.58     0.99     1.21     1.45
+z_u[1,51]     -0.16    0.01  0.49    -1.10    -0.49    -0.16     0.18
+z_u[1,52]     -0.25    0.00  0.29    -0.81    -0.43    -0.25    -0.06
+z_u[1,53]      0.77    0.00  0.30     0.18     0.57     0.77     0.97
+z_u[1,54]      0.33    0.01  0.61    -0.84    -0.08     0.32     0.73
+z_u[1,55]      0.92    0.01  0.38     0.19     0.65     0.91     1.18
+z_u[1,56]     -1.28    0.01  0.29    -1.88    -1.46    -1.27    -1.08
+z_u[1,57]      0.52    0.00  0.28    -0.04     0.33     0.51     0.71
+z_u[1,58]     -0.23    0.01  0.52    -1.29    -0.58    -0.23     0.12
+z_u[1,59]     -0.92    0.01  0.59    -2.10    -1.31    -0.92    -0.53
+z_u[1,60]      0.12    0.01  0.33    -0.52    -0.11     0.12     0.34
+z_u[1,61]     -1.87    0.01  0.52    -2.89    -2.22    -1.86    -1.53
+z_u[1,62]     -0.44    0.01  0.65    -1.74    -0.87    -0.43     0.00
+z_u[1,63]      1.40    0.01  0.34     0.77     1.16     1.39     1.62
+z_u[1,64]     -0.25    0.00  0.26    -0.77    -0.42    -0.25    -0.07
+z_u[1,65]     -0.35    0.01  0.40    -1.14    -0.62    -0.35    -0.07
+z_u[1,66]     -0.87    0.01  0.64    -2.12    -1.32    -0.87    -0.44
+z_u[1,67]     -0.03    0.00  0.31    -0.65    -0.24    -0.02     0.18
+z_u[1,68]      0.97    0.01  0.52    -0.03     0.62     0.97     1.31
+z_u[1,69]     -1.12    0.01  0.61    -2.31    -1.54    -1.12    -0.70
+z_u[1,70]     -0.06    0.01  0.37    -0.79    -0.31    -0.07     0.19
+z_u[1,71]      0.19    0.01  0.43    -0.64    -0.11     0.18     0.47
+z_u[1,72]      0.29    0.01  0.90    -1.46    -0.32     0.31     0.91
+z_u[1,73]      0.73    0.01  0.42    -0.10     0.44     0.73     1.01
+z_u[2,1]       1.33    0.01  0.79    -0.19     0.80     1.33     1.87
+z_u[2,2]      -0.36    0.01  0.54    -1.39    -0.73    -0.37    -0.01
+z_u[2,3]      -0.10    0.01  0.67    -1.43    -0.55    -0.10     0.35
+z_u[2,4]       0.05    0.01  0.83    -1.55    -0.52     0.06     0.60
+z_u[2,5]      -1.21    0.01  0.79    -2.78    -1.75    -1.21    -0.69
+z_u[2,6]      -0.28    0.01  0.62    -1.52    -0.70    -0.28     0.15
+z_u[2,7]      -0.12    0.01  0.91    -1.92    -0.73    -0.12     0.49
+z_u[2,8]      -0.23    0.01  0.55    -1.32    -0.60    -0.22     0.13
+z_u[2,9]      -0.54    0.01  0.74    -1.97    -1.04    -0.54    -0.05
+z_u[2,10]     -1.03    0.01  0.54    -2.14    -1.38    -1.03    -0.69
+z_u[2,11]     -0.04    0.01  0.88    -1.76    -0.62    -0.05     0.54
+z_u[2,12]     -0.34    0.01  0.66    -1.61    -0.79    -0.35     0.11
+z_u[2,13]      0.24    0.01  0.66    -1.04    -0.20     0.23     0.69
+z_u[2,14]      0.48    0.01  0.81    -1.09    -0.05     0.47     1.02
+z_u[2,15]      1.32    0.01  0.62     0.10     0.91     1.32     1.73
+z_u[2,16]      0.47    0.01  0.64    -0.85     0.05     0.48     0.91
+z_u[2,17]     -0.51    0.01  0.75    -1.98    -1.02    -0.52    -0.01
+z_u[2,18]      0.09    0.01  0.66    -1.21    -0.36     0.09     0.53
+z_u[2,19]      0.98    0.01  0.53    -0.08     0.64     0.98     1.34
+z_u[2,20]      1.15    0.01  0.51     0.17     0.81     1.15     1.49
+z_u[2,21]     -0.18    0.01  0.60    -1.36    -0.59    -0.18     0.23
+z_u[2,22]      0.46    0.01  0.84    -1.15    -0.11     0.47     1.04
+z_u[2,23]      0.62    0.01  0.60    -0.53     0.21     0.62     1.02
+z_u[2,24]     -0.61    0.01  0.94    -2.50    -1.22    -0.61    -0.01
+z_u[2,25]      0.26    0.01  0.81    -1.33    -0.29     0.26     0.80
+z_u[2,26]      0.84    0.01  0.57    -0.31     0.46     0.84     1.22
+z_u[2,27]      0.09    0.01  0.58    -0.97    -0.31     0.07     0.47
+z_u[2,28]      0.60    0.01  0.59    -0.56     0.20     0.59     1.00
+z_u[2,29]      2.61    0.01  0.56     1.58     2.22     2.61     2.98
+z_u[2,30]     -0.89    0.01  0.69    -2.29    -1.35    -0.89    -0.45
+z_u[2,31]      0.25    0.01  0.87    -1.49    -0.31     0.26     0.83
+z_u[2,32]      0.24    0.01  0.87    -1.46    -0.35     0.24     0.82
+z_u[2,33]      0.57    0.01  0.83    -1.05     0.00     0.57     1.14
+z_u[2,34]      0.50    0.01  0.76    -0.98    -0.02     0.49     1.01
+z_u[2,35]     -2.12    0.01  0.59    -3.29    -2.49    -2.12    -1.72
+z_u[2,36]      0.24    0.01  0.72    -1.16    -0.23     0.24     0.73
+z_u[2,37]     -0.34    0.01  0.43    -1.22    -0.61    -0.33    -0.05
+z_u[2,38]      0.21    0.01  0.57    -0.95    -0.16     0.23     0.60
+z_u[2,39]     -0.02    0.01  0.64    -1.24    -0.46    -0.03     0.41
+z_u[2,40]      0.95    0.01  0.49     0.00     0.62     0.95     1.28
+z_u[2,41]     -0.11    0.01  0.52    -1.11    -0.45    -0.11     0.24
+z_u[2,42]     -1.19    0.01  0.42    -2.02    -1.47    -1.19    -0.90
+z_u[2,43]      0.02    0.01  0.87    -1.73    -0.56     0.02     0.62
+z_u[2,44]     -0.92    0.01  0.80    -2.44    -1.44    -0.93    -0.38
+z_u[2,45]      1.01    0.01  0.65    -0.26     0.59     1.00     1.42
+z_u[2,46]     -0.22    0.01  0.78    -1.75    -0.74    -0.21     0.29
+z_u[2,47]      0.36    0.01  0.56    -0.73    -0.02     0.35     0.73
+z_u[2,48]      0.12    0.01  0.57    -1.04    -0.27     0.12     0.51
+z_u[2,49]     -0.34    0.01  0.69    -1.69    -0.79    -0.32     0.10
+z_u[2,50]      0.35    0.01  0.63    -0.96    -0.08     0.37     0.78
+z_u[2,51]     -0.43    0.01  0.70    -1.83    -0.90    -0.44     0.05
+z_u[2,52]     -0.84    0.01  0.56    -1.94    -1.21    -0.84    -0.46
+z_u[2,53]     -0.44    0.01  0.49    -1.45    -0.76    -0.43    -0.09
+z_u[2,54]      0.72    0.01  0.79    -0.79     0.19     0.71     1.24
+z_u[2,55]     -0.52    0.01  0.56    -1.65    -0.89    -0.51    -0.14
+z_u[2,56]     -1.07    0.01  0.47    -1.98    -1.38    -1.08    -0.76
+z_u[2,57]     -1.03    0.01  0.56    -2.16    -1.41    -1.01    -0.64
+z_u[2,58]      0.32    0.01  0.66    -0.98    -0.12     0.34     0.76
+z_u[2,59]     -0.36    0.01  0.78    -1.85    -0.88    -0.38     0.17
+z_u[2,60]      0.63    0.01  0.60    -0.56     0.22     0.64     1.03
+z_u[2,61]     -0.70    0.01  0.80    -2.28    -1.23    -0.70    -0.18
+z_u[2,62]     -0.31    0.01  0.79    -1.89    -0.82    -0.32     0.22
+z_u[2,63]     -0.52    0.01  0.60    -1.71    -0.93    -0.53    -0.12
+z_u[2,64]     -0.15    0.01  0.44    -1.01    -0.45    -0.16     0.14
+z_u[2,65]     -0.82    0.01  0.63    -2.06    -1.22    -0.82    -0.40
+z_u[2,66]      0.07    0.01  0.88    -1.66    -0.52     0.10     0.65
+z_u[2,67]      0.08    0.01  0.53    -0.96    -0.27     0.07     0.42
+z_u[2,68]      0.54    0.01  0.66    -0.81     0.11     0.55     0.98
+z_u[2,69]     -0.73    0.01  0.83    -2.32    -1.28    -0.74    -0.16
+z_u[2,70]      0.67    0.01  0.56    -0.42     0.30     0.66     1.04
+z_u[2,71]     -0.96    0.01  0.62    -2.19    -1.38    -0.96    -0.53
+z_u[2,72]      0.28    0.01  0.91    -1.56    -0.33     0.27     0.91
+z_u[2,73]      0.91    0.01  0.66    -0.43     0.48     0.91     1.35
+u[1,1]       -19.26    0.10  6.07   -31.31   -23.31   -19.20   -15.08
+u[1,2]       -20.17    0.05  3.11   -26.27   -22.29   -20.12   -18.08
+u[1,3]        10.52    0.07  4.51     2.03     7.41    10.51    13.58
+u[1,4]         0.52    0.08  4.84    -9.24    -2.82     0.52     3.76
+u[1,5]        -3.39    0.11  6.94   -17.04    -8.10    -3.47     1.39
+u[1,6]         7.83    0.07  4.72    -1.47     4.66     7.76    10.98
+u[1,7]         0.26    0.09  5.99   -11.54    -3.74     0.29     4.36
+u[1,8]        11.44    0.05  3.06     5.57     9.38    11.40    13.50
+u[1,9]       -10.67    0.07  4.58   -19.64   -13.81   -10.62    -7.51
+u[1,10]       -3.64    0.05  2.85    -9.28    -5.55    -3.60    -1.72
+u[1,11]      -10.68    0.09  5.46   -21.18   -14.36   -10.68    -6.97
+u[1,12]      -18.67    0.06  3.73   -26.13   -21.17   -18.70   -16.16
+u[1,13]       16.62    0.07  4.58     7.84    13.47    16.66    19.72
+u[1,14]        2.11    0.11  7.03   -11.52    -2.55     2.08     6.84
+u[1,15]       10.68    0.06  3.81     3.23     8.18    10.68    13.23
+u[1,16]       15.91    0.06  3.88     8.55    13.25    15.87    18.42
+u[1,17]        5.10    0.07  4.59    -3.67     2.02     4.99     8.14
+u[1,18]       -6.66    0.08  4.95   -16.51   -10.03    -6.74    -3.20
+u[1,19]        4.12    0.05  3.32    -2.42     1.89     4.08     6.30
+u[1,20]       11.11    0.04  2.68     5.95     9.31    11.06    12.92
+u[1,21]        4.06    0.06  3.82    -3.62     1.42     4.13     6.62
+u[1,22]       13.74    0.09  5.79     2.64     9.73    13.61    17.70
+u[1,23]       -6.63    0.07  4.40   -15.04    -9.65    -6.60    -3.64
+u[1,24]       -0.41    0.10  6.04   -12.17    -4.38    -0.44     3.55
+u[1,25]       -1.48    0.07  4.11    -9.61    -4.28    -1.46     1.25
+u[1,26]       10.98    0.06  3.60     3.89     8.49    10.92    13.45
+u[1,27]      -13.21    0.06  3.55   -20.13   -15.60   -13.21   -10.88
+u[1,28]        5.73    0.05  3.01    -0.13     3.72     5.72     7.70
+u[1,29]       -8.00    0.06  3.68   -15.29   -10.45    -8.00    -5.52
+u[1,30]       11.94    0.07  4.61     3.23     8.84    11.77    15.10
+u[1,31]       -5.46    0.10  6.43   -18.00    -9.74    -5.41    -1.07
+u[1,32]       10.51    0.09  5.87    -0.89     6.41    10.43    14.53
+u[1,33]        1.66    0.11  7.10   -12.26    -3.16     1.75     6.55
+u[1,34]       -9.64    0.08  5.21   -19.91   -13.21    -9.57    -6.09
+u[1,35]       -2.59    0.07  4.37   -11.34    -5.48    -2.57     0.31
+u[1,36]       11.52    0.08  5.08     1.74     8.12    11.51    14.91
+u[1,37]        1.96    0.04  2.76    -3.38     0.10     1.95     3.80
+u[1,38]        3.13    0.06  3.76    -4.40     0.67     3.09     5.66
+u[1,39]       -0.09    0.08  4.93    -9.53    -3.51    -0.04     3.20
+u[1,40]       -1.12    0.05  3.45    -7.83    -3.48    -1.17     1.22
+u[1,41]        3.60    0.05  3.25    -2.67     1.36     3.64     5.79
+u[1,42]       -8.55    0.04  2.69   -13.87   -10.38    -8.50    -6.73
+u[1,43]        4.21    0.10  6.55    -8.66    -0.31     4.21     8.71
+u[1,44]      -13.96    0.11  7.01   -27.96   -18.59   -13.92    -9.44
+u[1,45]       -4.19    0.08  5.20   -14.79    -7.60    -4.19    -0.62
+u[1,46]       -3.09    0.06  3.86   -10.43    -5.70    -3.19    -0.45
+u[1,47]      -15.25    0.06  3.78   -22.93   -17.79   -15.21   -12.69
+u[1,48]        6.74    0.05  3.43     0.25     4.37     6.68     9.12
+u[1,49]        2.11    0.08  5.08    -7.66    -1.40     2.17     5.46
+u[1,50]       12.54    0.05  3.34     6.08    10.22    12.52    14.86
+u[1,51]       -1.63    0.08  5.02   -11.38    -5.01    -1.62     1.79
+u[1,52]       -2.56    0.05  2.92    -8.39    -4.49    -2.52    -0.62
+u[1,53]        7.92    0.05  3.05     1.81     5.92     7.91     9.96
+u[1,54]        3.36    0.10  6.21    -9.17    -0.82     3.32     7.53
+u[1,55]        9.40    0.06  3.90     1.93     6.69     9.43    12.02
+u[1,56]      -13.09    0.04  2.72   -18.64   -14.86   -13.06   -11.27
+u[1,57]        5.32    0.05  2.89    -0.37     3.42     5.30     7.26
+u[1,58]       -2.42    0.09  5.38   -13.03    -5.91    -2.37     1.19
+u[1,59]       -9.51    0.10  6.08   -21.24   -13.57    -9.46    -5.45
+u[1,60]        1.19    0.05  3.37    -5.41    -1.13     1.26     3.52
+u[1,61]      -19.24    0.08  5.29   -29.87   -22.58   -19.23   -15.69
+u[1,62]       -4.53    0.11  6.70   -17.66    -9.05    -4.43     0.01
+u[1,63]       14.31    0.05  3.24     8.13    12.07    14.35    16.47
+u[1,64]       -2.54    0.04  2.66    -7.75    -4.40    -2.53    -0.73
+u[1,65]       -3.61    0.07  4.14   -11.81    -6.46    -3.58    -0.76
+u[1,66]       -9.00    0.10  6.58   -22.12   -13.37    -8.97    -4.55
+u[1,67]       -0.30    0.05  3.21    -6.59    -2.48    -0.25     1.88
+u[1,68]       10.00    0.08  5.32    -0.34     6.33    10.06    13.56
+u[1,69]      -11.50    0.10  6.36   -23.84   -15.81   -11.44    -7.23
+u[1,70]       -0.65    0.06  3.75    -8.09    -3.14    -0.67     1.96
+u[1,71]        1.93    0.07  4.41    -6.54    -1.09     1.89     4.89
+u[1,72]        3.03    0.15  9.34   -15.40    -3.29     3.19     9.41
+u[1,73]        7.45    0.07  4.30    -1.13     4.54     7.48    10.35
+u[2,1]        14.75    0.10  6.49     2.93    10.25    14.36    18.93
+u[2,2]         4.63    0.05  3.46    -1.99     2.20     4.59     7.00
+u[2,3]        -4.18    0.08  4.91   -14.02    -7.44    -4.02    -0.93
+u[2,4]         0.09    0.09  5.62   -10.73    -3.71     0.12     3.82
+u[2,5]        -6.36    0.10  6.40   -19.49   -10.47    -6.16    -1.97
+u[2,6]        -4.39    0.08  4.92   -14.12    -7.73    -4.26    -1.04
+u[2,7]        -0.81    0.10  6.16   -13.11    -4.93    -0.89     3.25
+u[2,8]        -5.23    0.06  3.73   -12.56    -7.74    -5.22    -2.76
+u[2,9]         0.35    0.08  5.17    -9.63    -3.10     0.31     3.87
+u[2,10]       -4.99    0.06  3.64   -12.12    -7.35    -4.94    -2.61
+u[2,11]        3.33    0.10  6.02    -8.31    -0.62     3.30     7.30
+u[2,12]        4.22    0.07  4.51    -4.42     1.13     4.23     7.15
+u[2,13]       -4.15    0.08  4.86   -13.54    -7.40    -4.16    -0.89
+u[2,14]        2.24    0.10  6.36   -10.08    -1.97     2.13     6.44
+u[2,15]        4.39    0.07  4.36    -4.19     1.50     4.38     7.23
+u[2,16]       -2.51    0.07  4.40   -11.31    -5.43    -2.43     0.50
+u[2,17]       -4.89    0.08  5.32   -15.40    -8.60    -4.85    -1.25
+u[2,18]        2.79    0.08  5.09    -7.07    -0.62     2.73     6.25
+u[2,19]        4.54    0.06  3.83    -3.30     2.02     4.55     7.14
+u[2,20]        3.19    0.05  3.33    -3.36     0.95     3.15     5.41
+u[2,21]       -2.46    0.07  4.33   -10.93    -5.32    -2.47     0.54
+u[2,22]       -1.83    0.10  6.03   -13.92    -5.71    -1.75     2.15
+u[2,23]        6.02    0.07  4.64    -3.03     2.80     6.05     9.18
+u[2,24]       -3.69    0.10  6.40   -16.89    -7.69    -3.47     0.39
+u[2,25]        2.08    0.08  5.36    -8.37    -1.59     2.00     5.73
+u[2,26]        1.34    0.06  4.05    -6.51    -1.46     1.38     4.08
+u[2,27]        4.98    0.06  4.04    -2.84     2.15     5.03     7.63
+u[2,28]        1.67    0.06  3.97    -5.95    -1.06     1.70     4.39
+u[2,29]       18.42    0.07  4.34    10.05    15.45    18.40    21.27
+u[2,30]       -9.48    0.08  5.13   -19.93   -12.97    -9.39    -6.01
+u[2,31]        3.39    0.10  6.34    -9.20    -0.73     3.36     7.54
+u[2,32]       -2.08    0.09  5.94   -14.05    -5.88    -2.07     1.82
+u[2,33]        2.99    0.10  6.48    -9.40    -1.41     2.78     7.19
+u[2,34]        6.32    0.09  5.61    -4.49     2.47     6.20    10.05
+u[2,35]      -11.96    0.07  4.72   -21.35   -15.06   -11.97    -8.76
+u[2,36]       -2.44    0.08  5.33   -12.90    -6.03    -2.33     1.13
+u[2,37]       -2.68    0.05  3.08    -8.85    -4.76    -2.67    -0.62
+u[2,38]        0.24    0.07  4.20    -8.26    -2.51     0.21     3.05
+u[2,39]       -0.12    0.08  5.03    -9.76    -3.54    -0.17     3.20
+u[2,40]        6.10    0.06  3.72    -1.26     3.55     6.07     8.64
+u[2,41]       -1.85    0.06  3.70    -9.02    -4.40    -1.88     0.65
+u[2,42]       -4.24    0.05  2.90    -9.83    -6.18    -4.24    -2.26
+u[2,43]       -1.32    0.10  6.31   -14.39    -5.49    -1.25     2.88
+u[2,44]       -0.88    0.10  6.40   -13.40    -5.11    -0.87     3.35
+u[2,45]        7.57    0.08  5.31    -2.70     4.05     7.50    10.97
+u[2,46]       -0.32    0.08  5.12   -10.44    -3.66    -0.23     3.14
+u[2,47]        7.31    0.06  4.10    -0.70     4.54     7.37    10.04
+u[2,48]       -1.57    0.06  4.02    -9.54    -4.33    -1.58     1.14
+u[2,49]       -2.77    0.08  5.22   -13.15    -6.15    -2.72     0.75
+u[2,50]       -2.09    0.07  4.22   -10.51    -4.96    -2.02     0.74
+u[2,51]       -2.05    0.08  5.18   -12.15    -5.50    -2.11     1.46
+u[2,52]       -4.18    0.06  3.77   -11.70    -6.73    -4.14    -1.60
+u[2,53]       -5.28    0.05  3.47   -12.26    -7.52    -5.24    -2.90
+u[2,54]        3.27    0.09  5.96    -8.15    -0.64     3.17     7.06
+u[2,55]       -6.33    0.07  4.23   -14.58    -9.22    -6.30    -3.39
+u[2,56]       -2.00    0.05  3.05    -8.03    -4.01    -2.02     0.01
+u[2,57]       -7.94    0.06  3.82   -15.53   -10.53    -7.97    -5.29
+u[2,58]        2.80    0.08  5.34    -7.72    -0.76     2.82     6.41
+u[2,59]        1.04    0.09  5.96   -10.47    -3.08     1.04     4.86
+u[2,60]        3.38    0.07  4.16    -4.63     0.57     3.38     6.12
+u[2,61]        2.23    0.09  5.72    -8.94    -1.58     2.22     5.88
+u[2,62]       -0.37    0.10  6.29   -12.65    -4.38    -0.50     3.73
+u[2,63]       -7.99    0.07  4.15   -16.21   -10.74    -7.93    -5.22
+u[2,64]       -0.08    0.05  3.10    -6.15    -2.17    -0.09     2.07
+u[2,65]       -3.72    0.07  4.62   -12.74    -6.80    -3.71    -0.61
+u[2,66]        3.52    0.10  6.24    -8.59    -0.71     3.56     7.73
+u[2,67]        0.59    0.06  3.77    -6.66    -1.96     0.51     3.17
+u[2,68]       -0.09    0.08  5.32   -10.44    -3.73    -0.17     3.48
+u[2,69]       -0.55    0.10  6.10   -12.40    -4.59    -0.68     3.56
+u[2,70]        4.25    0.07  4.14    -3.82     1.48     4.22     7.09
+u[2,71]       -6.52    0.08  4.79   -15.97    -9.70    -6.37    -3.26
+u[2,72]        0.70    0.11  6.95   -12.84    -3.71     0.56     5.30
+u[2,73]        2.98    0.08  4.83    -6.18    -0.27     2.99     6.12
+lp__       -5359.04    0.45 12.51 -5384.20 -5367.23 -5358.73 -5350.67
+              97.5% n_eff Rhat
+beta[1]       72.30  1284 1.01
+beta[2]        9.43  1989 1.00
+sigma_e       13.54  4000 1.00
+sigma_u[1]    12.75  1517 1.00
+sigma_u[2]     9.34  1177 1.01
+L_u[1,1]       1.00  4000  NaN
+L_u[1,2]       0.00  4000  NaN
+L_u[2,1]      -0.19  2124 1.00
+L_u[2,2]       0.98  2195 1.00
+z_u[1,1]      -0.77  4000 1.00
+z_u[1,2]      -1.32  2392 1.00
+z_u[1,3]       1.91  4000 1.00
+z_u[1,4]       0.97  4000 1.00
+z_u[1,5]       0.97  4000 1.00
+z_u[1,6]       1.65  4000 1.00
+z_u[1,7]       1.18  4000 1.00
+z_u[1,8]       1.76  4000 1.00
+z_u[1,9]      -0.19  4000 1.00
+z_u[1,10]      0.18  4000 1.00
+z_u[1,11]      0.00  4000 1.00
+z_u[1,12]     -1.09  4000 1.00
+z_u[1,13]      2.51  4000 1.00
+z_u[1,14]      1.50  4000 1.00
+z_u[1,15]      1.82  4000 1.00
+z_u[1,16]      2.36  4000 1.00
+z_u[1,17]      1.40  4000 1.00
+z_u[1,18]      0.27  4000 1.00
+z_u[1,19]      1.06  4000 1.00
+z_u[1,20]      1.66  2455 1.00
+z_u[1,21]      1.12  4000 1.00
+z_u[1,22]      2.44  4000 1.00
+z_u[1,23]      0.17  4000 1.00
+z_u[1,24]      1.10  4000 1.00
+z_u[1,25]      0.63  4000 1.00
+z_u[1,26]      1.78  4000 1.00
+z_u[1,27]     -0.58  4000 1.00
+z_u[1,28]      1.16  4000 1.00
+z_u[1,29]     -0.07  4000 1.00
+z_u[1,30]      2.03  4000 1.00
+z_u[1,31]      0.70  4000 1.00
+z_u[1,32]      2.13  4000 1.00
+z_u[1,33]      1.48  4000 1.00
+z_u[1,34]      0.05  4000 1.00
+z_u[1,35]      0.58  4000 1.00
+z_u[1,36]      2.10  4000 1.00
+z_u[1,37]      0.73  4000 1.00
+z_u[1,38]      1.03  4000 1.00
+z_u[1,39]      0.94  4000 1.00
+z_u[1,40]      0.56  4000 1.00
+z_u[1,41]      0.99  4000 1.00
+z_u[1,42]     -0.31  4000 1.00
+z_u[1,43]      1.68  4000 1.00
+z_u[1,44]      0.00  4000 1.00
+z_u[1,45]      0.57  4000 1.00
+z_u[1,46]      0.44  4000 1.00
+z_u[1,47]     -0.75  4000 1.00
+z_u[1,48]      1.33  4000 1.00
+z_u[1,49]      1.16  4000 1.00
+z_u[1,50]      1.92  4000 1.00
+z_u[1,51]      0.80  4000 1.00
+z_u[1,52]      0.31  4000 1.00
+z_u[1,53]      1.38  4000 1.00
+z_u[1,54]      1.52  4000 1.00
+z_u[1,55]      1.69  4000 1.00
+z_u[1,56]     -0.74  2400 1.00
+z_u[1,57]      1.08  4000 1.00
+z_u[1,58]      0.75  4000 1.00
+z_u[1,59]      0.22  4000 1.00
+z_u[1,60]      0.74  4000 1.00
+z_u[1,61]     -0.87  4000 1.00
+z_u[1,62]      0.85  4000 1.00
+z_u[1,63]      2.07  4000 1.00
+z_u[1,64]      0.25  4000 1.00
+z_u[1,65]      0.44  4000 1.00
+z_u[1,66]      0.36  4000 1.00
+z_u[1,67]      0.58  4000 1.00
+z_u[1,68]      2.01  4000 1.00
+z_u[1,69]      0.08  4000 1.00
+z_u[1,70]      0.65  4000 1.00
+z_u[1,71]      1.05  4000 1.00
+z_u[1,72]      2.02  4000 1.00
+z_u[1,73]      1.55  4000 1.00
+z_u[2,1]       2.88  4000 1.00
+z_u[2,2]       0.74  4000 1.00
+z_u[2,3]       1.22  4000 1.00
+z_u[2,4]       1.71  4000 1.00
+z_u[2,5]       0.36  4000 1.00
+z_u[2,6]       0.93  4000 1.00
+z_u[2,7]       1.71  4000 1.00
+z_u[2,8]       0.84  4000 1.00
+z_u[2,9]       0.92  4000 1.00
+z_u[2,10]      0.03  4000 1.00
+z_u[2,11]      1.71  4000 1.00
+z_u[2,12]      0.96  4000 1.00
+z_u[2,13]      1.50  4000 1.00
+z_u[2,14]      2.04  4000 1.00
+z_u[2,15]      2.54  4000 1.00
+z_u[2,16]      1.69  4000 1.00
+z_u[2,17]      1.00  4000 1.00
+z_u[2,18]      1.37  4000 1.00
+z_u[2,19]      2.03  4000 1.00
+z_u[2,20]      2.17  4000 1.00
+z_u[2,21]      0.98  4000 1.00
+z_u[2,22]      2.08  4000 1.00
+z_u[2,23]      1.79  4000 1.00
+z_u[2,24]      1.24  4000 1.00
+z_u[2,25]      1.85  4000 1.00
+z_u[2,26]      1.98  4000 1.00
+z_u[2,27]      1.26  4000 1.00
+z_u[2,28]      1.76  4000 1.00
+z_u[2,29]      3.72  4000 1.00
+z_u[2,30]      0.44  4000 1.00
+z_u[2,31]      1.93  4000 1.00
+z_u[2,32]      1.96  4000 1.00
+z_u[2,33]      2.22  4000 1.00
+z_u[2,34]      2.00  4000 1.00
+z_u[2,35]     -0.98  4000 1.00
+z_u[2,36]      1.62  4000 1.00
+z_u[2,37]      0.49  4000 1.00
+z_u[2,38]      1.28  4000 1.00
+z_u[2,39]      1.22  4000 1.00
+z_u[2,40]      1.95  4000 1.00
+z_u[2,41]      0.89  4000 1.00
+z_u[2,42]     -0.35  4000 1.00
+z_u[2,43]      1.76  4000 1.00
+z_u[2,44]      0.69  4000 1.00
+z_u[2,45]      2.31  4000 1.00
+z_u[2,46]      1.35  4000 1.00
+z_u[2,47]      1.49  4000 1.00
+z_u[2,48]      1.22  4000 1.00
+z_u[2,49]      1.01  4000 1.00
+z_u[2,50]      1.53  4000 1.00
+z_u[2,51]      0.95  4000 1.00
+z_u[2,52]      0.23  4000 1.00
+z_u[2,53]      0.48  4000 1.00
+z_u[2,54]      2.25  4000 1.00
+z_u[2,55]      0.56  4000 1.00
+z_u[2,56]     -0.13  4000 1.00
+z_u[2,57]      0.05  4000 1.00
+z_u[2,58]      1.59  4000 1.00
+z_u[2,59]      1.20  4000 1.00
+z_u[2,60]      1.80  4000 1.00
+z_u[2,61]      0.86  4000 1.00
+z_u[2,62]      1.27  4000 1.00
+z_u[2,63]      0.64  4000 1.00
+z_u[2,64]      0.72  4000 1.00
+z_u[2,65]      0.46  4000 1.00
+z_u[2,66]      1.80  4000 1.00
+z_u[2,67]      1.14  4000 1.00
+z_u[2,68]      1.82  4000 1.00
+z_u[2,69]      0.90  4000 1.00
+z_u[2,70]      1.79  4000 1.00
+z_u[2,71]      0.26  4000 1.00
+z_u[2,72]      2.08  4000 1.00
+z_u[2,73]      2.18  4000 1.00
+u[1,1]        -7.78  4000 1.00
+u[1,2]       -14.16  4000 1.00
+u[1,3]        19.39  4000 1.00
+u[1,4]         9.96  4000 1.00
+u[1,5]         9.76  4000 1.00
+u[1,6]        17.00  4000 1.00
+u[1,7]        12.09  4000 1.00
+u[1,8]        17.47  4000 1.00
+u[1,9]        -1.98  4000 1.00
+u[1,10]        1.83  4000 1.00
+u[1,11]       -0.03  4000 1.00
+u[1,12]      -11.45  4000 1.00
+u[1,13]       25.40  4000 1.00
+u[1,14]       15.62  4000 1.00
+u[1,15]       18.17  4000 1.00
+u[1,16]       23.69  4000 1.00
+u[1,17]       14.10  4000 1.00
+u[1,18]        2.73  4000 1.00
+u[1,19]       10.74  4000 1.00
+u[1,20]       16.28  4000 1.00
+u[1,21]       11.47  4000 1.00
+u[1,22]       25.10  4000 1.00
+u[1,23]        1.78  4000 1.00
+u[1,24]       11.40  4000 1.00
+u[1,25]        6.62  4000 1.00
+u[1,26]       17.98  4000 1.00
+u[1,27]       -6.24  4000 1.00
+u[1,28]       11.74  4000 1.00
+u[1,29]       -0.72  4000 1.00
+u[1,30]       20.97  4000 1.00
+u[1,31]        6.99  4000 1.00
+u[1,32]       22.11  4000 1.00
+u[1,33]       15.36  4000 1.00
+u[1,34]        0.56  4000 1.00
+u[1,35]        5.89  4000 1.00
+u[1,36]       21.78  4000 1.00
+u[1,37]        7.29  4000 1.00
+u[1,38]       10.39  4000 1.00
+u[1,39]        9.63  4000 1.00
+u[1,40]        5.74  4000 1.00
+u[1,41]        9.87  4000 1.00
+u[1,42]       -3.26  4000 1.00
+u[1,43]       17.15  4000 1.00
+u[1,44]       -0.03  4000 1.00
+u[1,45]        5.73  4000 1.00
+u[1,46]        4.65  4000 1.00
+u[1,47]       -7.78  4000 1.00
+u[1,48]       13.54  4000 1.00
+u[1,49]       11.88  4000 1.00
+u[1,50]       18.93  4000 1.00
+u[1,51]        8.23  4000 1.00
+u[1,52]        3.19  4000 1.00
+u[1,53]       13.98  4000 1.00
+u[1,54]       15.51  4000 1.00
+u[1,55]       17.06  4000 1.00
+u[1,56]       -7.89  4000 1.00
+u[1,57]       11.03  4000 1.00
+u[1,58]        7.85  4000 1.00
+u[1,59]        2.23  4000 1.00
+u[1,60]        7.53  4000 1.00
+u[1,61]       -8.93  4000 1.00
+u[1,62]        8.65  4000 1.00
+u[1,63]       20.62  4000 1.00
+u[1,64]        2.75  4000 1.00
+u[1,65]        4.48  4000 1.00
+u[1,66]        3.75  4000 1.00
+u[1,67]        6.12  4000 1.00
+u[1,68]       20.33  4000 1.00
+u[1,69]        0.74  4000 1.00
+u[1,70]        6.68  4000 1.00
+u[1,71]       10.78  4000 1.00
+u[1,72]       21.25  4000 1.00
+u[1,73]       15.77  4000 1.00
+u[2,1]        28.40  4000 1.00
+u[2,2]        11.47  4000 1.00
+u[2,3]         5.33  4000 1.00
+u[2,4]        11.37  4000 1.00
+u[2,5]         5.78  4000 1.00
+u[2,6]         4.87  4000 1.00
+u[2,7]        11.69  4000 1.00
+u[2,8]         2.08  4000 1.00
+u[2,9]        10.59  4000 1.00
+u[2,10]        2.26  4000 1.00
+u[2,11]       15.18  4000 1.00
+u[2,12]       13.08  4000 1.00
+u[2,13]        5.10  4000 1.00
+u[2,14]       15.01  4000 1.00
+u[2,15]       13.11  4000 1.00
+u[2,16]        6.01  4000 1.00
+u[2,17]        5.51  4000 1.00
+u[2,18]       12.64  4000 1.00
+u[2,19]       11.91  4000 1.00
+u[2,20]        9.75  4000 1.00
+u[2,21]        6.00  4000 1.00
+u[2,22]        9.72  4000 1.00
+u[2,23]       15.13  4000 1.00
+u[2,24]        8.44  4000 1.00
+u[2,25]       12.73  4000 1.00
+u[2,26]        9.32  4000 1.00
+u[2,27]       13.23  4000 1.00
+u[2,28]        9.39  4000 1.00
+u[2,29]       27.13  4000 1.00
+u[2,30]        0.20  4000 1.00
+u[2,31]       15.97  4000 1.00
+u[2,32]        9.71  4000 1.00
+u[2,33]       15.83  4000 1.00
+u[2,34]       17.69  4000 1.00
+u[2,35]       -2.88  4000 1.00
+u[2,36]        8.01  4000 1.00
+u[2,37]        3.27  4000 1.00
+u[2,38]        8.28  4000 1.00
+u[2,39]       10.03  4000 1.00
+u[2,40]       13.55  4000 1.00
+u[2,41]        5.36  4000 1.00
+u[2,42]        1.45  4000 1.00
+u[2,43]       10.72  4000 1.00
+u[2,44]       11.66  4000 1.00
+u[2,45]       18.36  4000 1.00
+u[2,46]        9.59  4000 1.00
+u[2,47]       15.45  4000 1.00
+u[2,48]        6.29  4000 1.00
+u[2,49]        7.35  4000 1.00
+u[2,50]        6.13  4000 1.00
+u[2,51]        8.10  4000 1.00
+u[2,52]        3.07  4000 1.00
+u[2,53]        1.27  4000 1.00
+u[2,54]       15.21  4000 1.00
+u[2,55]        1.88  4000 1.00
+u[2,56]        3.91  4000 1.00
+u[2,57]       -0.56  4000 1.00
+u[2,58]       13.56  4000 1.00
+u[2,59]       12.76  4000 1.00
+u[2,60]       11.63  4000 1.00
+u[2,61]       13.84  4000 1.00
+u[2,62]       12.14  4000 1.00
+u[2,63]        0.18  4000 1.00
+u[2,64]        6.10  4000 1.00
+u[2,65]        5.27  4000 1.00
+u[2,66]       15.71  4000 1.00
+u[2,67]        8.06  4000 1.00
+u[2,68]       10.30  4000 1.00
+u[2,69]       11.37  4000 1.00
+u[2,70]       12.58  4000 1.00
+u[2,71]        2.52  4000 1.00
+u[2,72]       14.39  4000 1.00
+u[2,73]       12.39  4000 1.00
+lp__       -5335.35   788 1.01
 
-Samples were drawn using NUTS(diag_e) at Thu Feb 15 13:30:59 2018.
+Samples were drawn using NUTS(diag_e) at Thu Feb 22 11:53:46 2018.
 For each parameter, n_eff is a crude measure of effective sample size,
 and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).</code></pre>
+<!-- ```{r} -->
+<!-- # L matrices -->
+<!-- L_u <- rstan::extract(lkj_stan, pars = "L_u")$L_u -->
+<!-- L_u[1:5,] -->
+<!-- head(cor_u) -->
+<!-- # correlation parameters -->
+<!-- cor_u <- apply(L_u, 1, function(x) tcrossprod(x)[1, 2]) -->
+<!-- print(signif(quantile(apply(L_u, 1, function(x) tcrossprod(x)[1, 2]), probs = c(0.025, 0.5, 0.975)), 2)) -->
+<!-- print(mean(apply(L_u, 1, function(x) tcrossprod(x)[1, 2]))) -->
+<!-- m_stanarm4 <- stan_lmer(course ~ female + (1 + x| schid), data = GCSE) -->
+<!-- GCSE.datalist -->
+<!-- # Define Stan data objects -->
+<!-- J <- length(unique(GCSE$schid)) -->
+<!-- L <- 2# the number of schools -->
+<!-- K <- 2 -->
+<!-- N <- length(GCSE$stdid)          # the number of students -->
+<!-- schid <- GCSE$schid              # school identifier -->
+<!-- y <- GCSE$course                 # outcome variable -->
+<!-- x <- GCSE$female                 # student-level predictor -->
+<!-- u <- GCSE$female_mean       # school-level predictor -->
+<!-- #GCSE %>% group_by(schid) %>%  filter(row_number()==1 ) %>% select(female_mean)->uu -->
+<!-- GCSE %>%  select(schid,female_mean)->uu -->
+<!-- uu$schid <- rep(1,N) -->
+<!-- GCSE.datalist <- list(J = J, N = N, school = schid,  -->
+<!--                       y = y, x = uu, u = uu, L = L, K = K )  -->
+<!-- stan_lkj <- stan(file = "lmm4.stan", data = GCSE.datalist,  -->
+<!--                 iter = 2000, chains = 4, seed = 13436756786) -->
+<!-- print(stan_lkj) -->
+<!-- getwd() -->
+<!-- head(GCSE.datalist) -->
+<!-- GCSE.datalist$ -->
+</div>
+<div id="lkj-on-gcse-no-cholesky-factorization" class="section level1">
+<h1>LKJ on GCSE: no Cholesky Factorization</h1>
+<!-- ```{stan , highlight = T, tidy = T} -->
+<!-- data{ -->
+<!--   int<lower = 1> N; // number of students -->
+<!--   int<lower = 1> J; // 73 schools -->
+<!--   int<lower = 1> K; // 2 predictors (intercept and slope -->
+<!--   int<lower =1, upper = J> school[N]; -->
+<!--   matrix[N, K] x; -->
+<!--   vector[N] y; -->
+<!-- } -->
+<!-- parameters{ -->
+<!--   corr_matrix[K] Omega; -->
+<!--   vector<lower=0>[K] tau; -->
+<!--   vector[K] beta[J]; -->
+<!--   real<lower=0> sigma; -->
+<!--   vector[K] mu; -->
+<!-- } -->
+<!-- model { -->
+<!--   tau ~ cauchy(0, 1); -->
+<!--   sigma ~ cauchy(0, 1); -->
+<!--   Omega ~ lkj_corr(2); -->
+<!--   mu ~ normal(0, 10); -->
+<!--   for (j in 1:J) -->
+<!--     beta[j] ~ multi_normal(mu, quad_form_diag(Omega, tau)); -->
+<!--   { -->
+<!--   vector[N] X_beta_cafe; -->
+<!--   for (n in 1:N) -->
+<!--    X_beta_school[n] = x[n] * beta[school[n]]; -->
+<!--   y ~ normal(X_beta_school, sigma); -->
+<!-- } -->
+<!-- } -->
+<!-- generated quantities { -->
+<!--   matrix[K, K] Sigma; -->
+<!--   Sigma = quad_form_diag(Omega, tau); -->
+<!-- } -->
+<!-- ``` -->
+<!-- ``` -->
 </div>
 
 
