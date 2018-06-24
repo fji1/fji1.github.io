@@ -1,0 +1,17 @@
+baseurl = "/"
+languageCode = "en-us"
+title = "Education research using Stan"
+theme = "hugo-xmin"
+googleAnalytics = ""
+disqusShortname = ""
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+preserveTaxonomyNames = true
+footnotereturnlinkcontents = "↩"
+
+[permalinks]
+    post = "/post/:year/:month/:day/:slug/"
+    note = "/note/:year/:month/:day/:slug/"
+
+[params]
+    description = "A website built through Hugo and blogdown."
+    footer = "&copy; Development of this page and the case-studies and tutorials was supported by the Institute of Education Sciences, U.S. Department of Education, through Grant [**R305D140059**](https://ies.ed.gov/funding/grantsearch/details.asp?ID=1485)"

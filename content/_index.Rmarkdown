@@ -1,0 +1,124 @@
+---
+title: Home
+---
+<!---[<img src="/content/Bayes.jpg" style="max-width:15%;min-width:40px;float:right;" alt="Github repo" />](https://github.com/yihui/hugo-xmin)
+--->
+<font color="003262" size="12"> Education research using</font><font color="FDB515" size="12"> Stan </font>
+
+
+# Tutorials
+---
+* [Two-Parameter Logistic Item Response Model](http://mc-stan.org/users/documentation/case-studies/tutorial_twopl.html) &nbsp; <small>[_(Abstract)_](http://mc-stan.org/users/documentation/case-studies.html#two-parameter-logistic-item-response-model)</small>
+
+
+# Case Studies
+---
+## Item Response Theory Models
+#### Binary 
+* [Hierarchical Two-Parameter Logistic Item Response Model](http://mc-stan.org/users/documentation/case-studies/hierarchical_2pl.html) &nbsp;  <small>[_(Abstract)_](http://mc-stan.org/users/documentation/case-studies.html#hierarchical-two-parameter-logistic-item-response-model)</small>
+    
+* [Rasch and Two-Parameter Logistic Item Response Models with Latent Regression](http://mc-stan.org/users/documentation/case-studies/rasch_and_2pl.html) &nbsp; <small>[_(Abstract)_](http://mc-stan.org/users/documentation/case-studies.html#rasch-and-two-parameter-logistic-item-response-models-with-latent-regression)</small>
+
+
+#### Polytomous
+* [Rating Scale and Generalized Rating Scale Models with Latent Regression](http://mc-stan.org/users/documentation/case-studies/rsm_and_grsm.html) &nbsp; <small>[_(Abstract)_](http://mc-stan.org/users/documentation/case-studies.html#rating-scale-and-generalized-rating-scale-models-with-latent-regression)</small>
+    
+* [Partial Credit and Generalized Partial Credit Models with Latent Regression](http://mc-stan.org/users/documentation/case-studies/pcm_and_gpcm.html) &nbsp; <small>[_(Abstract)_](http://mc-stan.org/users/documentation/case-studies.html#partial-credit-and-generalized-partial-credit-models-with-latent-regression)</small>
+
+## Cognitive Diagnosis Models
+  * [DINA with independent attributes](http://mc-stan.org/users/documentation/case-studies/dina_independent.html) &nbsp;
+        <small>[_(Abstract)_](http://mc-stan.org/users/documentation/case-studies.html#cognitive-diagnosis-model-dina-model-with-independent-attributes)</small>
+ 
+
+# R packages
+---
+* [brms: Bayesian Regression Models Using Stan](https://cran.r-project.org/web/packages/brms/index.html)
+* [blavaan: Bayesian Structural Equation Models Using Stan](https://faculty.missouri.edu/~merklee/blavaan/)
+* [edstan: Stan Models for Item Response Theory](https://cran.rstudio.com/web/packages/edstan/)
+* [idealstan: Ideal Point Models Using Stan](https://github.com/saudiwin/idealstan)
+* [rstantools: Tools for Developing R Packages Interfacing with Stan](https://cran.r-project.org/web/packages/rstantools/index.html)
+* [rstanarm: Bayesian Applied Regression Modeling via Stan](https://cran.rstudio.com/web/packages/rstanarm/)
+  * [Webinar "Introduction to Bayesian Computation Using the rstanarm Package"](https://youtu.be/z7zOzL9Rrzs)
+* [rethinking: Statistical Rethinking course and book package](https://github.com/rmcelreath/rethinking)
+
+# Publications
+---
+## Education-related publications *on* Stan
+
+<details><summary>Stan Language/Interfaces</summary>
+
+* Gelman, A., Lee, D., & Guo, J. (2015). [Stan: A probabilistic programming language for Bayesian inference and optimization.](http://journals.sagepub.com/doi/10.3102/1076998615606113) *Journal of Educational and Behavioral Statistics*, 40, 530-543.
+
+* Grant, R. L., Carpenter, C., Furr, D., & Gelman, A. (2017). [Introducing the StataStan interface for fast, complex Bayesian modeling using Stan.](https://www.stata-journal.com/article.html?article=st0476) *The Stata Journal.* 17(2), 330-342. </details>
+<details>
+
+<summary>Item Response Theory</summary>
+
+* Ames, A. J., & Au, C. H. (2018). [Using Stan for Item Response Theory Models.](https://www.tandfonline.com/doi/full/10.1080/15366367.2018.1437304) *Measurement: Interdisciplinary Research and Perspectives*, 16(2), 129-134.
+
+
+* Grant, R. L., Furr, D. C., Carpenter, B., & Gelman, A. (2017). [Fitting Bayesian item response models in Stata and Stan.](https://www.stata-journal.com/article.html?article=st0477) *The Stata Journal*, 17(2), 343-357.
+
+* Luo, Y., & Jiao, H. (2017). [Using the Stan Program for Bayesian Item Response Theory.](http://journals.sagepub.com/doi/abs/10.1177/0013164417693666) *Educational and Psychological Measurement.* 77, 1–25.</details>
+<details>
+
+<summary>Cognitive Diagnosis Models</summary>
+
+* Jiang, Z. and Carter, R., (2018). [Using Hamiltonian Monte Carlo to estimate the log-linear cognitive diagnosis model via Stan.](https://link.springer.com/article/10.3758/s13428-018-1069-9) *Behavior Research Methods*, pp.1-12. </details>
+<details>
+
+<summary>Multilevel Modeling</summary>
+
+* Mai, Y. & Zhang, Z., (2018). [Software Packages for Bayesian Multilevel Modeling.](https://www.tandfonline.com/doi/abs/10.1080/10705511.2018.1431545?src=recsys&journalCode=hsem20) *Structural Equation Modeling: A Multidisciplinary Journal*, 25(4), pp.650-658.
+
+* Sorensen, T., Hohenstein, S. and Vasishth, S. (2016).   [Bayesian Linear Mixed Models using Stan: A tutorial for psychologists, linguists, and cognitive scientists.](www.tqmp.org/RegularArticles/vol12-3/p175/p175.pdf)*Quantitative Methods for Psychology*, 12(3), 175-200
+</details>
+
+## Education-related publications *using* Stan
+<details>
+<summary>Methodological</summary>
+
+* Bainter, S.A., (2017). [Bayesian Estimation for Item Factor Analysis Models with Sparse Categorical Indicators.](https://www.tandfonline.com/doi/full/10.1080/00273171.2017.1342203) *Multivariate behavioral research*, 52(5), pp.593-615.
+
+* Chang, M.I., (2017). [A Comparison of Two MCMC Algorithms for Estimating the 2PL IRT Models (Doctoral dissertation)](https://search.proquest.com/docview/1970617653), Southern Illinois University at Carbondale.
+
+* da Silva, M. A., de Oliveira, E. S., von Davier, A. A., & Bazán, J. L. (2018). [Estimating the DINA model parameters using the No‐U‐Turn Sampler](https//doi.org/10.1002/bimj.201600225). *Biometrical Journal*, 60(2), 352-368. 
+[Code and Data]( https://onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1002%2Fbimj.201600225&attachmentId=2191309317)
+
+
+* Furr (2017) [Bayesian and frequentist cross-validation methods for explanatory item response models.](http://digitalassets.lib.berkeley.edu/etd/ucb/text/Furr_berkeley_0028E_17225.pdf) PhD Dissertation, Graduate School of Education, University of California, Berkeley.
+
+
+* Luo, Y., & Al-Harbi, K. (2017).[Performances of LOO and WAIC as IRT model selection methods.](http://www.psychologie-aktuell.com/fileadmin/download/ptam/2-2017_20170627/03_Luo_.pdf) *Psychological Test and Assessment Modeling*, 59(2), 183-205.
+
+* Merkle, E., Furr, D. and Rabe-Hesketh, S. (2018). [Bayesian model assessment: Use of conditional vs marginal likelihoods.](https://arxiv.org/abs/1802.04452) *arXiv preprint arXiv:1802.04452.*
+
+* Pan, Y. (2016). [Essays on Applying Bayesian Data Analysis to Improve Evidence-based Decision-making in Education (Doctoral dissertation).](https://academiccommons.columbia.edu/catalog/ac:202821) Columbia University
+
+* Revuelta, J. & Ximénez, C., (2017). [Bayesian Dimensionality Assessment for the Multidimensional Nominal Response Model.](https://doi.org/10.3389/fpsyg.2017.00961) *Frontiers in psychology*, 8, p.961.
+
+* Tan, J. Y. C. (2013). [Mathematical modelling and statistical analysis of school-based student performance data</A> (Doctoral dissertation).](http://hdl.handle.net/2440/83277) School of Mathematical Sciences, University of Adelaide, Adelaide, South Australia.</details>
+<details>
+
+<summary>Applied</summary>
+
+* Bellettini, C., Lonati, V., Malchiodi, D., Monga, M., Morpurgo, A. & Torelli, M., 2015, June.[ How Challenging are Bebras Tasks?: an IRT analysis based on the performance of Italian students.](https://dl.acm.org/citation.cfm?id=2742603) *In Proceedings of the 2015 ACM conference on innovation and technology in computer science education (pp. 27-32).* ACM.
+
+
+* Daus, S., Nilsen, T., & Braeken, J. (2018). [Exploring Content Knowledge: Country Profile of Science Strengths and Weaknesses in TIMSS. Possible Implications for Educational Professionals and Science Research.](https://www.tandfonline.com/doi/full/10.1080/00313831.2018.1478882) *Scandinavian Journal of Educational Research*, 1-19.
+
+* Foxcroft, D. R., Callen, H., Davies, E. L., & Okulicz-Kozaryn, K. (2016). [Effectiveness of the strengthening families programme 10–14 in Poland: cluster randomized controlled trial.](https://academic.oup.com/eurpub/article/27/3/494/2670167) *The European Journal of Public Health*, 27(3), 494-500.
+
+* Gale, J., Ooms, A., Grant, R., Paget, K., & Marks-Maran, D. (2016). [Student nurse selection and predictability of academic success: The Multiple Mini Interview project.](https://www.ncbi.nlm.nih.gov/pubmed/27125161) *Nurse Education Today*, 40, 123-127.</details>
+<details>
+
+<summary>Books</summary>
+
+* Lambert, B. (2018). [A Student’s Guide to Bayesian Statistics.](https://us.sagepub.com/en-us/nam/a-student%E2%80%99s-guide-to-bayesian-statistics/book245409) Sage Press.
+
+* McElreath, R. (2016). [Statistical rethinking: A Bayesian course with examples in R and Stan.](http://xcelab.net/rm/statistical-rethinking/) CRC Press.
+  
+* Kruschke, J. (2014). [Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan.](https://www.elsevier.com/books/doing-bayesian-data-analysis/kruschke/978-0-12-405888-0) Academic Press.
+</details>
+
+<small>If you know further publications, please contact Sophia Rabe-Hesketh [(sophiarh@berkeley.edu)](mailto:sophiarh@berkeley.edu).</small>
